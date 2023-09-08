@@ -1,0 +1,36 @@
+<div class="content-box">
+  <div class="content-blk">
+    <datatable  [headers]="headers" 
+      [hideExport]="true"  [filterTypeArr]="filterTypeArr" [genderList]="genderArray" [breedsList]="breedArray" placeholder="Search"
+      (formatter)="formatter($event)" defaultColumn="modifiedDate" dir="DESC" 
+      [petsList]="petNamesList"
+      pageName="select-primary-duplicatepets"
+      url="/api/duplicatePets/getDuplicatePets"
+     [selectedPrimaryPetId]="selectedPrimaryPetId"
+     (resetEmitter)="reset($event)"
+     >
+    </datatable>
+    <!-- (selectedRecords)="selectedRecords($event)" -->
+    <!-- (selectedRecords)="selectedRecordsForVersion($event)" -->
+    <div class="row mb-3" >
+      <div class="col-12">
+          <div class="float-right">
+              <button class="btn btn-secondary" type="button"
+                  (click)="back()">
+                  Back
+              </button>&nbsp;&nbsp;
+              <button class="btn btn-primary" type="button" (click)="next()">Next</button>
+          </div>
+      </div>
+  </div>
+  </div>
+  
+</div>
+
+<ng-template #primaryTemplate let-data="rowData" >
+  
+  <label class="chk-container">
+    <input type="checkbox" [checked]="data.isChecked" (change)="getChkboxValue($event, data)" id="flexCheckDefault">
+    <span class="checkmark"></span>
+  </label>
+</ng-template>

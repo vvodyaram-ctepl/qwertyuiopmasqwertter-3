@@ -1,0 +1,91 @@
+<form [formGroup]="assetForm">
+    <div class="content-box">
+        <div class="content-block">
+            <div formArrayName="arr" *ngFor="
+            let a of assetForm?.get('arr')['controls'];
+            let i = index;
+            let last = last
+          ">
+                <div [formGroupName]="i">
+                    <div class="row custom-gutters-5 mb-4">
+                        <div class="col-3">
+                            <fieldset class="w-fieldset"
+                                [disabled]="!addFilterFlag || !(assetForm.value.arr[i].disabled)">
+                                <legend><label class="label">Asset Type <span class="asterisk"
+                                            *ngIf="displayStar">*</span></label>
+                                </legend>
+                                <lib-typeahead [data]="assetForm.value.arr[i].assetTypeList" matcher="name"
+                                    formControlName="assetType" class="w-100 mb-0" placeholder="" class="w-100"
+                                    (selectedItem)='assetTypeSelected($event,i)' (onClear)="onClearAssetType(i)">
+                                </lib-typeahead>
+
+                            </fieldset>
+                            <validation-message [control]="assetForm.get('arr').controls[i].controls.assetType">
+                            </validation-message>
+                        </div>
+                        <div class="col-3">
+                            <fieldset class="w-fieldset"
+                                [disabled]="!addFilterFlag || !(assetForm.value.arr[i].disabled)">
+                                <legend><label class="label">Asset Model <span class="asterisk"
+                                            *ngIf="displayStar">*</span></label></legend>
+                                <lib-typeahead [data]="assetForm.value.arr[i].assetModelList" matcher="name"
+                                    (selectedItem)='assetModelSelected($event,i);' (onClear)="onClearModel(i)"
+                                    formControlName="model" class="w-100 mb-0" placeholder="" class="w-100">
+                                </lib-typeahead>
+
+                            </fieldset>
+                            <validation-message [control]="assetForm.get('arr').controls[i].controls.model">
+                            </validation-message>
+                        </div>
+                        <div class="col-3">
+
+                            <fieldset class="w-fieldset"
+                                [disabled]="!addFilterFlag || !(assetForm.value.arr[i].disabled)">
+                                <legend><label class="label">Asset Number <span class="asterisk"
+                                            *ngIf="displayStar">*</span></label>
+                                </legend>
+                                <lib-typeahead [data]="assetForm.value.arr[i].deviceList" matcher="deviceNumber"
+                                    formControlName="deviceNumber" class="w-100 mb-0" placeholder="" class="w-100">
+                                </lib-typeahead>
+
+                            </fieldset>
+                            <validation-message [control]="assetForm.get('arr').controls[i].controls.deviceNumber">
+                            </validation-message>
+                        </div>
+                        <div class="col-2">
+                            <fieldset class="w-fieldset"
+                                [disabled]="!addFilterFlag || !(assetForm.value.arr[i].disabled)">
+                                <legend><label class="label">Allocated On <span class="asterisk"
+                                            *ngIf="displayStar">*</span></label></legend>
+                                <datepicker class="w-100" formControlName="allocatedOn" format="MM-DD-YYYY"
+                                    [maxDate]="currDate">
+                                </datepicker>
+                            </fieldset>
+                            <validation-message [control]="assetForm.get('arr').controls[i].controls.allocatedOn">
+                            </validation-message>
+                        </div>
+                        <div class="col-1 center-align mtop-15 float-right" *ngIf="addFilterFlag">
+                            <div class="card icon-card-list red-bg mr-2 pointer-cursor" title="Remove"
+                                *ngIf="assetForm.value.arr.length > 1 && assetForm.value.arr[i].disabled"
+                                (click)="removeItem(i)">
+                                <span class="pointer-cursor size-17" title="Remove">-</span>
+                            </div>
+                            <div class="card icon-card-list blue-bg" title="Add" *ngIf="last">
+                                <span class="fa fa-plus pointer-cursor size-15" style="color:white;" title="Add"
+                                    (click)="addItem()"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="float-right">
+                        <button class="btn btn-secondary" type="button" (click)="back()">Back</button>&nbsp;&nbsp;
+                        <button class="btn btn-primary" type="button" (click)="next()">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

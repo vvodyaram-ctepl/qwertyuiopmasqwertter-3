@@ -1,0 +1,349 @@
+<form [formGroup]="deviceForm">
+  <div class="content-box">
+    <div class="content-block">
+      <div formArrayName="arr" *ngFor="
+        let a of deviceForm?.get('arr')['controls'];
+        let i= index;
+        let last= last
+        ">
+        <div [formGroupName]="i">
+          <div class="row custom-gutters-5 mb-4">
+            <div class="col-2">
+              <fieldset class="w-fieldset" [disabled]="!addFilterFlag ||
+                !(deviceForm.value.arr[i].disabled)">
+                <legend><label class="label w-100">Study <span class="asterisk" *ngIf="displayStar">*</span></label>
+                </legend>
+                <select class="form-control w-100" formControlName="study" (change)="onSelectStudy($event,i)">
+                  <option value="">Select</option>
+                  <option *ngFor='let list of studyArr' [value]="list.studyId">{{list.studyName}}</option>
+                </select>
+              </fieldset>
+              <validation-message [control]="deviceForm.get('arr').controls[i].controls.study"></validation-message>
+            </div>
+            <div class="col-2">
+              <fieldset class="w-fieldset" [disabled]="!addFilterFlag ||
+                !(deviceForm.value.arr[i].disabled)">
+                <legend><label class="label">Asset Type <span class="asterisk" *ngIf="displayStar">*</span></label>
+                </legend>
+                <lib-typeahead [data]="deviceForm.value.arr[i].assetTypeList" matcher="name" formControlName="assetType"
+                  class="w-100 mb-0" placeholder="" class="w-100" (selectedItem)='assetTypeSelected($event,i)'
+                  (onClear)="onClearAssetType(i)">
+                </lib-typeahead>
+              </fieldset>
+              <validation-message [control]="deviceForm.get('arr').controls[i].controls.assetType">
+              </validation-message>
+            </div>
+            <div class="col-2">
+              <fieldset class="w-fieldset" [disabled]="!addFilterFlag ||
+                !(deviceForm.value.arr[i].disabled)">
+                <legend><label class="label">Asset Model <span class="asterisk" *ngIf="displayStar">*</span></label>
+                </legend>
+                <lib-typeahead [data]="deviceForm.value.arr[i].assetModelList" matcher="name"
+                  (selectedItem)='assetModelSelected($event,i);' (onClear)="onClearModel(i)" formControlName="model"
+                  class="w-100 mb-0" placeholder="" class="w-100">
+                </lib-typeahead>
+              </fieldset>
+              <validation-message [control]="deviceForm.get('arr').controls[i].controls.model">
+              </validation-message>
+            </div>
+            <div class="col-2">
+              <fieldset class="w-fieldset" [disabled]="!addFilterFlag ||
+                !(deviceForm.value.arr[i].disabled)">
+                <legend><label class="label">Asset Number <span class="asterisk" *ngIf="displayStar">*</span></label>
+                </legend>
+                <lib-typeahead [data]="deviceForm.value.arr[i].deviceList" matcher="deviceNumber"
+                  formControlName="deviceNumber" class="w-100 mb-0" placeholder="" class="w-100">
+                </lib-typeahead>
+              </fieldset>
+              <validation-message [control]="deviceForm.get('arr').controls[i].controls.deviceNumber">
+              </validation-message>
+            </div>
+            <div class="col-2">
+              <fieldset class="w-fieldset" [disabled]="!addFilterFlag ||
+                !(deviceForm.value.arr[i].disabled)">
+               <legend><label class="label">Association Date <span class="asterisk"
+                      *ngIf="displayStar">*</span></label></legend>
+                <datepicker class="w-100" formControlName="assignedOn"
+                  [minDate]="deviceForm.value.arr[i].studyAssignedOn" [maxDate]="deviceForm.value.arr[i].studyEndDate"
+                  format="MM-DD-YYYY"></datepicker>
+              </fieldset>
+              <validation-message [control]="deviceForm.get('arr').controls[i].controls.assignedOn">
+              </validation-message>
+            </div>
+            <div class="col-2 d-flex center-align">
+              <!-- Unassign, replace and history -->
+              <span class="d-flex center-align" *ngIf="!(deviceForm.value.arr[i].disabled) && addFilterFlag">
+                <label class="text-center mr-1" *ngIf="!deviceForm.value.arr[i].replacedDeviceId">
+                  <div class="label" style="color: #4B4B5A;font-size: 13px;">
+                    Unassign
+                  </div>
+                  <input type="checkbox" formControlName="unassignCheck" class="check checkbox-width-20"
+                    (change)="onCheckboxChange($event,i)" />
+                </label>
+                <img src="../../../../assets/images/replace.png" title="Replace" alt="Replace" width="30px"
+                  class="mr-1 img-fluid pointer-cursor" (click)="isReplace= true;
+                showUnassignOrReplace(unassignOrReplaceContent, 'xs', i)" *ngIf="!deviceForm.value.arr[i].unassignCheck &&
+                !deviceForm.value.arr[i].replacedDeviceId">
+                <img src="../../../../assets/images/undo-replace.png" title="Undo Replace" alt="Undo Replace"
+                  width="30px" class="mr-1 img-fluid pointer-cursor" (click)="resetUnassignOrReplace(i)" *ngIf="!deviceForm.value.arr[i].unassignCheck &&
+                deviceForm.value.arr[i].replacedDeviceId">
+                <img src="../../../../assets/images/history.png" title="History" alt="History" width="30px"
+                  class="mr-1 img-fluid pointer-cursor" (click)="getHistory(i);
+                  tooltipHover= [true]">
+                <!-- tooltipHover = [true] to make the first tooltip open by default -->
+              </span>
+              <!-- Add or remove buttons -->
+              <span *ngIf="addFilterFlag">
+                <div class="card icon-card-list red-bg mr-2 pointer-cursor" title="Remove" *ngIf="deviceForm.value.arr.length> 1 &&
+                deviceForm.value.arr[i].disabled" (click)="removeItem(i)">
+                  <span class="pointer-cursor size-17" title="Remove">-</span>
+                </div>
+                <div class="card icon-card-list blue-bg" title="Add" *ngIf="editFlag && last && !isVirtual">
+                  <span class="fa fa-plus pointer-cursor size-15" style="color:white;" title="Add"
+                    (click)="addItem()"></span>
+                </div>
+                <div class="card icon-card-list blue-bg" title="Add" *ngIf="!editFlag && last">
+                  <span class="fa fa-plus pointer-cursor size-15" style="color:white;" title="Add"
+                    (click)="addItem()"></span>
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="float-right">
+            <button class="btn btn-secondary" type="button" (click)="back()">Back</button>&nbsp;&nbsp;
+            <button class="btn btn-primary" type="button" (click)="next()">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<ng-template #unassignOrReplaceContent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross
+      click');resetUnassignOrReplace(formIndex)">
+      <div class="close-wrapper">
+        <span aria-hidden="true" class="icon-close"></span>
+      </div>
+    </button>
+    <div class="heading">
+      <h5 class="modal-title" id="modal-basic-title">
+        {{isReplace ? 'Replace' : 'Unassign Asset'}}
+      </h5>
+    </div>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="unassignOrReplaceForm">
+      <div class="row mb-3">
+        <div class="col-12 mb-3">
+          <fieldset class="w-fieldset">
+            <legend><label class="label">Reason <span class="asterisk">*</span></label></legend>
+            <select class="form-control w-100" formControlName="reason" (change)="onReasonChange()">
+              <option value="">Select</option>
+              <option *ngFor='let list of reasonArr' [value]="list.reasonId">{{list.reasonName}}</option>
+            </select>
+          </fieldset>
+          <validation-message [control]="unassignOrReplaceForm.controls.reason"></validation-message>
+        </div>
+        <div class="col-12 mb-3" *ngIf="!isReplace">
+          <fieldset class="w-fieldset">
+            <legend><label class="label">Unassigned On <span class="asterisk">*</span></label></legend>
+            <datepicker class="w-100" formControlName="unAssignedOn" [minDate]="deviceForm.value.arr[formIndex].assignedOn"
+              format="MM-DD-YYYY"></datepicker>
+          </fieldset>
+          <validation-message [control]="unassignOrReplaceForm.controls.unAssignedOn"></validation-message>
+        </div>
+        <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+          5">
+          <fieldset class="w-fieldset">
+            <legend><label class="label">Date of Death
+                <span class="asterisk">*</span>
+              </label>
+            </legend>
+            <datepicker class="w-100" formControlName="dateOfDeath" format="MM-DD-YYYY" [maxDate]="currentDate">
+            </datepicker>
+          </fieldset>
+          <validation-message [control]="unassignOrReplaceForm.controls.dateOfDeath"></validation-message>
+        </div>
+        <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+          5">
+          <div class="checkbox-wrapper">
+            <label>
+              <input type="checkbox" class="check checkbox-width-20" formControlName="isApproximateDateOfDeath" />
+              <span class="label" style="margin-top: -31px;
+              display: block;
+              margin-left: 27px;">
+                Approximate
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+          4">
+          <fieldset class="w-fieldset">
+            <legend><label class="label">Date of Lost to Follow Up
+                <span class="asterisk">*</span>
+              </label>
+            </legend>
+            <datepicker class="w-100" formControlName="lostToFollowUpDate" format="MM-DD-YYYY" [maxDate]="currentDate">
+            </datepicker>
+          </fieldset>
+          <validation-message [control]="unassignOrReplaceForm.controls.lostToFollowUpDate"></validation-message>
+        </div>
+        <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+          4">
+          <div class="checkbox-wrapper">
+            <label>
+              <input type="checkbox" class="check checkbox-width-20" formControlName="isApproxLostToFollowUpDate" />
+              <span class="label" style="margin-top: -31px;
+              display: block;
+              margin-left: 27px;">
+                Approximate
+              </span>
+            </label>
+          </div>
+        </div>
+        <ng-container *ngIf="isReplace">
+          <ng-container formGroupName="replacementAsset">
+            <div class="col-6 mb-3">
+              <fieldset class="w-fieldset">
+                <legend><label class="label">Asset Type <span class="asterisk">*</span></label>
+                </legend>
+                <lib-typeahead [data]="unassignOrReplaceForm.value.replacementAsset.assetTypeList" matcher="name"
+                  formControlName="assetType" class="w-100 mb-0" placeholder="" class="w-100"
+                  (selectedItem)='assetTypeSelectedinReplace($event)' (onClear)="onClearAssetTypeinReplace()">
+                </lib-typeahead>
+              </fieldset>
+              <validation-message [control]="unassignOrReplaceForm.get('replacementAsset').controls.assetType">
+              </validation-message>
+            </div>
+            <div class="col-6 mb-3">
+              <fieldset class="w-fieldset">
+                <legend><label class="label">Asset Model <span class="asterisk">*</span></label>
+                </legend>
+                <lib-typeahead [data]="unassignOrReplaceForm.value.replacementAsset.assetModelList" matcher="name"
+                  (selectedItem)='assetModelSelectedinReplace($event);' (onClear)="onClearAssetModelinReplace()"
+                  formControlName="assetModel" class="w-100 mb-0" placeholder="" class="w-100">
+                </lib-typeahead>
+              </fieldset>
+              <validation-message [control]="unassignOrReplaceForm.get('replacementAsset').controls.assetModel">
+              </validation-message>
+            </div>
+            <div class="col-6 mb-3">
+              <fieldset class="w-fieldset">
+                <legend><label class="label">Asset Number <span class="asterisk">*</span></label>
+                </legend>
+                <lib-typeahead [data]="unassignOrReplaceForm.value.replacementAsset.assetNumberList"
+                  matcher="deviceNumber" formControlName="deviceNumber" class="w-100 mb-0" placeholder="" class="w-100">
+                </lib-typeahead>
+              </fieldset>
+              <validation-message [control]="unassignOrReplaceForm.get('replacementAsset').controls.deviceNumber">
+              </validation-message>
+            </div>
+          </ng-container>
+          <div class="col-6 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Association Date <span class="asterisk">*</span></label>
+              </legend>
+              <datepicker class="w-100" formControlName="unAssignedOn"
+                [minDate]="deviceForm.value.arr[formIndex].studyAssignedOn"
+                [maxDate]="deviceForm.value.arr[formIndex].studyEndDate" format="MM-DD-YYYY"></datepicker>
+            </fieldset>
+            <validation-message [control]="unassignOrReplaceForm.controls.unAssignedOn">
+            </validation-message>
+          </div>
+        </ng-container>
+        <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.studiesMappedToSameDevice.length">
+          <h4>{{isReplace ? 'Replace' : 'Unassign'}} for other Studies</h4>
+          <hr class="mt-0">
+          <ng-container formArrayName="studiesMappedToSameDevice" *ngFor="let studies of
+            unassignOrReplaceForm?.get('studiesMappedToSameDevice')['controls'];
+            let i= index">
+            <div class="checkbox-wrapper" [formGroupName]="i">
+              <label>
+                <input type="checkbox" class="check checkbox-width-20" formControlName="isChecked"
+                  (change)="checkStudyAndDeviceNumbersExist($event, i)" />
+                <span class="label" style="margin-top: -31px; display: block;
+                margin-left: 27px;">
+                  {{studies.value.studyName}}
+                </span>
+              </label>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 mb-4">
+          <button type="button" class="btn btn-secondary btn-custom float-right"
+            (click)="d('Cross click');resetUnassignOrReplace(formIndex);">
+            No
+          </button>&nbsp;&nbsp;
+          <button type="submit" class="btn btn-primary btn-custom float-right mr-3" (click)="unassignOrReplaceSubmit()">
+            Yes
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #historyContent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <div class="close-wrapper">
+        <span aria-hidden="true" class="icon-close"></span>
+      </div>
+    </button>
+    <div class="heading">
+      <h5 class="modal-title" id="modal-basic-title">
+        {{streamHistory[0].dataStreamId}} History<span class="ml-2 font-weight-normal">Assets:
+          {{streamHistory.length}}</span>
+      </h5>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-11">
+        <b style="margin-top: 97px; float: left; clear: both;">Assigned</b>
+        <ul class="timeline-horizontal">
+          <ng-container *ngFor="let points of streamHistory;let i= index; let
+            last= last">
+            <li class="timeline-item" [ngClass]="!points.unassignedOn ? 'active-device' : ''" [ngStyle]="{ 'width': !last ?
+              (97/(streamHistory.length-1))+'%' : ''}">
+              <div class="timeline-badge pointer-cursor" (mouseenter)="onHoverStream(i)"
+                (mouseleave)="onHoverStream(i)">
+              </div>
+              <div class="timeline-panel" [ngStyle]="{'display': tooltipHover[i] ? 'block' : 'none'}">
+                <div class="device-number">{{points.deviceNumber}}</div>
+                <div class="stream-date" *ngIf="points.assignedOn"><label>Association
+                    Date:</label> {{points.assignedOn
+                  | customDateFormat}}</div>
+                <div class="stream-date" *ngIf="points.unassignedOn"><label>Dissociation
+                    Date:</label>
+                  {{points.unassignedOn
+                  | customDateFormat}}</div>
+                <div class="asset-model"><label>Asset Model:</label>
+                  {{points.deviceModel}}</div>
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+
+        <div class="legends">
+          <span class="replaced-device mr-4"><span class="legend replaced-legend"></span> Replacement</span>
+          <span class="active-device mr-4"><span class="legend active-legend"></span> Assigned</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 mb-4">
+        <button type="button" class="btn btn-secondary btn-custom float-right" (click)="d('Cross click')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

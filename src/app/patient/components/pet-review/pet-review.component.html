@@ -1,0 +1,513 @@
+<div class="content-box">
+  <div class="content-block font-size-14">
+
+    <!-- pet details starts here -->
+    <div class="row mb-3">
+      <div class="col-12 px-0">
+        <fieldset class="w-heading">
+          <legend class="">
+            <label class="label">Pet Info</label>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row custom-text" *ngIf="data != undefined && data.petInfo">
+      <div class="col" style="max-width: 85px;">
+        <div class="header-text mb-1">Pet Image</div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Pet Name</div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Species</div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Breed</div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Gender</div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Date of Birth <span *ngIf="data.petInfo.dateofBirth && data.petInfo.isDobUnknown">
+            (Approximate)</span></div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Spayed/Neutered</div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Status</div>
+      </div>
+    </div>
+    <div class="row mb-2 custom-text content-background">
+      <div class="col" style="max-width: 85px;">
+        <span class="petImag" *ngIf="data?.petInfo?.petImageUrl">
+          <div style="background-image: url({{data.petInfo.petImageUrl}});"></div>
+        </span>
+        <span class="petImag" *ngIf="!data?.petInfo.petImageUrl">
+          <div style="background-image: url(assets/images/no-dogs.svg);"></div>
+        </span>
+      </div>
+      <div class="col">
+        <div>{{data.petInfo.petName}}</div>
+      </div>
+      <div class="col">
+        <div>{{data.petInfo.speciesName ? data.petInfo.speciesName : '-'}}</div>
+      </div>
+      <div class="col">
+        <div>{{data.petInfo.breed ? data.petInfo.breed.breedName :'-' }}</div>
+      </div>
+      <div class="col">
+        <div>{{data.petInfo.gender || '-'}}</div>
+      </div>
+      <div class="col">
+        <div>{{data.petInfo.dateofBirth ? (data.petInfo.dateofBirth | customDateFormat) :'-'}}</div>
+      </div>
+      <div class="col">
+        <div>{{data.petInfo.category == 'Neutered' ? 'Yes' : 'No'}}</div>
+      </div>
+      <div class="col">
+        <span>{{getStatusName(data.petInfo.status)}}</span>
+      </div>
+    </div>
+
+    <div class="row custom-text" *ngIf="data != undefined && data.petInfo">
+      <div class="col" *ngIf="data.petInfo.status == 3">
+        <div class="header-text mb-3">Date of Death <span *ngIf="data.petInfo.isApproximateDateOfDeath">
+            (Approximate)</span>
+        </div>
+      </div>
+      <div class="col" *ngIf="data.petInfo.status == 4">
+        <div class="header-text mb-3">Date of Lost to Follow Up <span *ngIf="data.petInfo.isApproxLostToFollowUpDate">
+            (Approximate)</span>
+        </div>
+      </div>
+      <div class="col">
+        <div class="header-text mb-3">Pet Address
+        </div>
+      </div>
+    </div>
+    <div class="row mb-1 custom-text content-background">
+      <div class="col" *ngIf="data.petInfo.status == 3">
+        <div>{{data.petInfo.dateOfDeath | customDateFormat}} </div>
+      </div>
+      <div class="col" *ngIf="data.petInfo.status == 4">
+        <div>{{data.petInfo.lostToFollowUpDate | customDateFormat}} </div>
+      </div>
+      <div class="col">
+        <div>{{data.petInfo.isPetWithPetParent ?
+          getSelectedPetParentAddress()
+          :
+          (data.petInfo.petAddress?.address1 ?
+          (data.petInfo.petAddress?.address1 + ', ' +
+          (data.petInfo.petAddress?.address2 ?
+          (data.petInfo.petAddress?.address2 + ', ') : '') +
+          data.petInfo.petAddress?.city + ', ' +
+          data.petInfo.petAddress?.state + ', ' +
+          data.petInfo.petAddress?.country + ' - ' +
+          data.petInfo.petAddress?.zipCode + ' (' +
+          data.petInfo.petAddress?.timeZone + ')')
+          : '-')
+          }}</div>
+      </div>
+    </div>
+    <!-- pet details ends here -->
+
+    <!-- Asset starts here -->
+    <div class="row mb-3 mt-2 custom-text">
+      <div class="col-12 px-0">
+        <!-- <div class="review-hdr">Asset Details</div> -->
+        <fieldset class="w-heading">
+          <legend class="">
+            <label class="label">Asset Details</label>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col header-text">
+        Asset Type
+      </div>
+      <div class="col header-text">
+        Asset Model
+      </div>
+      <div class="col header-text">
+        Asset Number
+      </div>
+      <div class="col header-text">
+        Allocation Date
+      </div>
+    </div>
+
+    <div class="row content-background"
+      *ngIf="data != undefined && (!data.petDevices || data.petDevices.arr.length == 0)">
+      <div class="col-12">
+        <div class="row mb-1">
+          <div class="col">
+            -
+          </div>
+          <div class="col">
+            -
+          </div>
+          <div class="col">
+            -
+          </div>
+          <div class="col">
+            -
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row content-background" *ngIf="data != undefined && data.petDevices">
+      <div class="col-12">
+        <div class="row mb-1" *ngFor="let list of data.petDevices.arr">
+          <div class="col">
+            {{list.assetType ? list.assetType.name : '-'}}
+          </div>
+          <div class="col">
+            {{list.model ? list.model.name : '-'}}
+          </div>
+          <div class="col">
+            {{list.deviceNumber ? list.deviceNumber.deviceNumber : '-'}}
+          </div>
+          <div class="col">
+            {{list.allocatedOn ? (list.allocatedOn | customDateFormat) : '-'}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Asset ends here -->
+
+    <!-- study starts here -->
+    <div class="row mb-3 mt-2 custom-text">
+      <div class="col-12 px-0">
+        <!-- <div class="review-hdr">Study</div> -->
+        <fieldset class="w-heading">
+          <legend class="">
+            <label class="label">Study</label>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-4 header-text">
+        Study
+      </div>
+      <div class="col-3 header-text">
+        Study Association Date
+      </div>
+      <div class="col-3 header-text">
+        Study Description
+      </div>
+      <div class="col-2 header-text"
+        *ngIf="data != undefined && data.petStudy && data.petStudy.arr[0].isExternal && data.petStudy.arr[0].isExternal == true">
+        External Pet
+      </div>
+    </div>
+
+    <div *ngIf="data != undefined && (!data.petStudy || data.petStudy.arr.length == 0)">
+      <div class="row mb-3 content-background">
+        <div class="col-4">
+          -
+        </div>
+        <div class="col-3">
+          -
+        </div>
+        <div class="col-3">
+          -
+        </div>
+      </div>
+    </div>
+
+    <div class="row content-background" *ngIf="data != undefined && data.petStudy">
+      <div class="col-12">
+        <div class="row mb-1" *ngFor="let list of newArr">
+          <div class="col-4">
+            {{list.studyName ? list.studyName : '-'}}
+          </div>
+          <div class="col-3">
+            {{list.studyassDate ? list.studyassDate : '-'}}
+          </div>
+          <div class="col-3">
+            {{list.studyDescription ? list.studyDescription : '-'}}
+          </div>
+          <div class="col-2"
+            *ngIf="data != undefined && data.petStudy && data.petStudy.arr[0].isExternal && data.petStudy.arr[0].isExternal == true">
+            {{list.externalPetValue ? list.externalPetValue : '-'}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Study ends here -->
+
+    <!-- Data Streams starts here -->
+    <div class="row mb-3 mt-2 custom-text">
+      <div class="col-12 px-0">
+        <!-- <div class="review-hdr">Data Streams Details</div> -->
+        <fieldset class="w-heading">
+          <legend class="">
+            <label class="label">Data Streams</label>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col header-text">
+        Study
+      </div>
+      <div class="col header-text">
+        Asset Type
+      </div>
+      <div class="col header-text">
+        Asset Model
+      </div>
+      <div class="col header-text">
+        Asset Number
+      </div>
+      <div class="col header-text">
+        Association Date
+      </div>
+      <div class="col header-text">
+        Unassign/ Replace
+      </div>
+      <div class="col header-text">
+        Unassigned On/Replaced On
+      </div>
+      <div class="col header-text">
+        Reason
+      </div>
+      <div class="col header-text">
+        Date of Death
+      </div>
+      <div class="col header-text">
+        Date of Lost to Follow Up
+      </div>
+    </div>
+
+    <div class="row content-background mb-1"
+      *ngIf="data != undefined && (!data.petStudyDevices || data.petStudyDevices.arr.length == 0)">
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+      <div class="col">
+        -
+      </div>
+    </div>
+
+    <div class="row content-background" *ngIf="data != undefined && data.petStudyDevices">
+      <div class="col-12">
+        <div class="row mb-1" *ngFor="let list of data.petStudyDevices.arr">
+          <div class="col">
+            {{list.studyName}}
+          </div>
+          <div class="col">
+            {{list.assetType ? list.assetType.name : '-'}}
+          </div>
+          <div class="col">
+            {{list.model ? list.model.name : '-'}}
+          </div>
+          <div class="col">
+            {{list.deviceNumber ? list.deviceNumber.deviceNumber : '-'}}
+          </div>
+          <div class="col">
+            {{list.assignedOn ? (list.assignedOn | customDateFormat) : '-'}}
+          </div>
+          <div class="col">
+            {{list.unassignCheck == true ? 'Yes' : (list.replacedDeviceId ? list.replacedDeviceNumber :
+            'No')}}
+          </div>
+          <div class="col">
+            {{list.unAssignedOn ? (list.unAssignedOn | customDateFormat) : '-'}}
+          </div>
+          <div class="col">
+            {{(list.unassignCheck == true || list.replacedDeviceId) ? list.reasonValue.reasonName : '-'}}
+          </div>
+          <div class="col">
+            {{list.dateOfDeath ? (list.dateOfDeath | customDateFormat) : '-'}}
+            <span *ngIf="list.isApproximateDateOfDeath"> (Approximate)</span>
+          </div>
+          <div class="col">
+            {{list.lostToFollowUpDate ? (list.lostToFollowUpDate | customDateFormat) : '-'}}
+            <span *ngIf="list.isApproxLostToFollowUpDate"> (Approximate)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Data Streams ends here -->
+
+    <!-- pet parent info starts here -->
+    <div class="row mb-3 mt-2 custom-text">
+      <div class="col-12 px-0">
+        <!-- <div class="review-hdr">Pet Parent Info</div> -->
+        <fieldset class="w-heading">
+          <legend class="">
+            <label class="label">Pet Parent Info</label>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-2 header-text">
+        Pet Parent Name
+      </div>
+      <div class="col-2 header-text">
+        Pet Parent Email
+      </div>
+      <div class="col-2 header-text">
+        Mobile
+      </div>
+      <div class="col-2 header-text">
+        Secondary Email
+      </div>
+      <div class="col-2 header-text">
+        Pet Parent Address
+      </div>
+      <div class="col-2 header-text">
+        Shipping Address
+      </div>
+    </div>
+
+    <div class="row content-background"
+      *ngIf="data != undefined && (!data.petParentInfo || data.petParentInfo.length == 0)">
+      <div class="col-12">
+        <div class="row mb-1">
+          <div class="col-2">
+            -
+          </div>
+          <div class="col-2">
+            -
+          </div>
+          <div class="col-2">
+            -
+          </div>
+          <div class="col-2">
+            -
+          </div>
+          <div class="col-2">
+            -
+          </div>
+          <div class="col-2">
+            -
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row content-background" *ngIf="data != undefined && (data.petParentInfo.length > 0)">
+      <div class="col-12">
+        <div class="row mb-1 " *ngFor="let list of data.petParentInfo">
+          <div class="col-2">
+            {{ list.petParentFirstName + ' ' + list.petParentLastName }}
+          </div>
+          <div class="col-2">
+            {{list.ppEmail}}
+          </div>
+          <div class="col-2">
+            {{list.phoneNumberCode}}
+            {{list.phoneNumberValue || '-'}}
+          </div>
+          <div class="col-2">
+            {{list.secondaryEmail ? list.secondaryEmail : '-'}}
+          </div>
+          <div class="col-2">
+            {{list.ppId ? (list.residentialAddress || '-') :
+            (list.residentialAddress?.address1 ?
+            (list.residentialAddress?.address1 + ', ' +
+            (list.residentialAddress?.address2 ?
+            (list.residentialAddress?.address2 + ', ') : '') +
+            list.residentialAddress?.city + ', ' +
+            list.residentialAddress?.state + ', ' +
+            list.residentialAddress?.country + ' - ' +
+            list.residentialAddress?.zipCode + ' (' +
+            list.residentialAddress?.timeZone + ')') : '-')}}
+          </div>
+          <div class="col-2">
+            {{
+            list.ppId ?
+            (list.shippingAddress
+            ||
+            '-') :
+            (list.shippingAddress?.address1 ?
+            (list.shippingAddress?.address1 + ', ' +
+            (list.shippingAddress?.address2 ?
+            (list.shippingAddress?.address2 + ', ') : '') +
+            list.shippingAddress?.city + ', ' +
+            list.shippingAddress?.state + ', ' +
+            list.shippingAddress?.country + ' - ' +
+            list.shippingAddress?.zipCode) : '-')
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- pet parent info ends here -->
+
+    <div class="row">
+      <div class="col-12 mt-3">
+        <div class="float-right">
+          <button class="btn btn-secondary" type="button" (click)="back()">
+            Back</button>&nbsp;&nbsp;
+          <button class="btn btn-primary" type="button" (click)="submit('')">
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #duplicatePetPopup let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title" id="modal-basic-title">
+      Duplicate Pet
+    </h5>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <div class="close-wrapper">
+        <span aria-hidden="true" class="icon-close"></span>
+      </div>
+    </button>
+  </div>
+  <div class="modal-body">
+
+    <div class="row mb-4">
+      <div class="col-12">
+        Pet <span class="bold-text" style="color:red">{{duplicatePetError}} </span> already exists. Do you want to
+        continue?
+      </div>
+    </div>
+    <div class="row text-right">
+      <div class="col-12 mb-4">
+        <button type="button" class="btn btn-secondary btn-custom float-right" (click)="d('Cross click');">
+          No
+        </button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-primary btn-custom float-right mr-3" (click)="submit('confirm')">
+          Yes
+        </button>
+      </div>
+    </div>
+
+  </div>
+</ng-template>

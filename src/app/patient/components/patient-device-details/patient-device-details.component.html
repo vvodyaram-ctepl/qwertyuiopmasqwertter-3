@@ -1,0 +1,5 @@
+<div class="mt-4 boxItem">
+    <datatable [headers]="headers" [hideExport]="true" dir="DESC" searchFilter="false" defaultColumn=""
+        url="/api/pets/getPetDevicesByStudy/{{petId}}/{{studyId}}" (formatter)="formatter($event)">
+    </datatable>
+</div>

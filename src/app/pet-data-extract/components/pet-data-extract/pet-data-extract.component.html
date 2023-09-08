@@ -1,0 +1,25 @@
+<div class="content-box">
+  <div class="content-hdr">
+    <div class="row">
+      <div class="col-6 block-left-center">
+        Manage Pet Data Extract
+      </div>
+    </div>
+  </div>
+  <div class="content-blk">
+    <datatable *ngIf="showDataTable" [headers]="headers" [hideExport]="true" [petsList]="petNamesList"
+      [genderList]="genderArray" [breedsList]="breedArray" placeholder="Search" (formatter)="formatter($event)"
+      defaultColumn="modifiedDate" dir="DESC" pageName="select-primary-duplicatepets" url="/api/petDataExtract/getPets"
+      (nodeAction)="getNode($event)">
+    </datatable>
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="float-right">
+          <button class="btn btn-secondary" type="button" routerLink="/user/petDataExtract">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

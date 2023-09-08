@@ -1,0 +1,155 @@
+<form [formGroup]="addQuestionnaireForm">
+    <div class="content-box">
+        <div class="content-block">
+            <div class="row mb-3">
+                <div class="col-6 mb-3">
+                    <fieldset class="w-fieldset">
+                        <legend><label class="label">Questionnaire Name <span class="asterisk">*</span></label></legend>
+                        <input type="text" formControlName="questionnaireName" class="form-control textbox"
+                            maxLength="100" />
+                    </fieldset>
+                    <validation-message [control]="addQuestionnaireForm.controls.questionnaireName">
+                    </validation-message>
+                </div>
+
+                <div class="col-3 mb-3">
+                    <fieldset class="w-fieldset">
+                        <legend><label class="label">Type <span class="asterisk">*</span></label></legend>
+                        <select class="form-control w-100" formControlName="questionnaireTypeId"
+                            (change)="questionnaireTypeSelect($event)">
+                            <option value="">Select</option>
+                            <option *ngFor="let que of questionnaireTypes" [value]="que.questionnaireTypeId">
+                                {{que.questionnaireType}}</option>
+                        </select>
+                    </fieldset>
+                    <validation-message [control]="addQuestionnaireForm.controls.questionnaireTypeId">
+                    </validation-message>
+                </div>
+
+                <div class="col-3 mb-3">
+                    <fieldset class="w-fieldset"
+                        [disabled]="addQuestionnaireForm.value.questionnaireTypeId == '' || addQuestionnaireForm.value.questionnaireTypeId == '2'">
+                        <legend><label class="label">Level <span
+                                    *ngIf="addQuestionnaireForm.value.questionnaireTypeId == 1"
+                                    class="asterisk">*</span></label></legend>
+                        <select class="form-control w-100" formControlName="questionnaireLevelId">
+                            <option value="">Select</option>
+                            <option value=1>Pet Level</option>
+                            <option value=2>Pet Parent Level</option>
+                        </select>
+                    </fieldset>
+                    <validation-message [control]="addQuestionnaireForm.controls.questionnaireLevelId">
+                    </validation-message>
+                </div>
+
+                <div class="col-3 mb-3">
+                    <fieldset class="w-fieldset"
+                        [disabled]=" questionnaireCategories.length == 0 && (addQuestionnaireForm.value.questionnaireTypeId == '' || addQuestionnaireForm.value.questionnaireTypeId == '1' )">
+                        <legend><label class="label">Category <span
+                                    *ngIf="addQuestionnaireForm.value.questionnaireTypeId == 2"
+                                    class="asterisk">*</span></label></legend>
+                        <select class="form-control w-100" formControlName="questionnaireCategoryId">
+                            <option value="">Select</option>
+                            <option *ngFor="let que of questionnaireCategories" [value]="que.questionnaireCategoryId">
+                                {{que.questionnaireCategory}}</option>
+                        </select>
+                        <!-- <input type="text" formControlName="questionnaireCategory" class="form-control textbox"
+                            maxLength="100" /> -->
+                    </fieldset>
+                    <validation-message [control]="addQuestionnaireForm.controls.questionnaireCategoryId">
+                    </validation-message>
+                </div>
+
+                <div class="col-3">
+                    <fieldset class="w-fieldset">
+                        <legend><label class="label">Start Date <span class="asterisk">*</span></label></legend>
+                        <datepicker class="w-100" formControlName="startDate" format="MM-DD-YYYY"></datepicker>
+                    </fieldset>
+                    <validation-message [control]="addQuestionnaireForm.controls.startDate"></validation-message>
+                </div>
+
+                <div class="col-3">
+                    <fieldset class="w-fieldset">
+                        <legend>
+                            <label class="label">End Date <span class="asterisk">*</span></label>
+                        </legend>
+                        <datepicker class="w-100" formControlName="endDate"
+                            [minDate]="addQuestionnaireForm.value.startDate" format="MM-DD-YYYY"></datepicker>
+                    </fieldset>
+                    <validation-message [control]="addQuestionnaireForm.controls.endDate"></validation-message>
+                </div>
+
+                <div class="col-3">
+                    <fieldset class="w-fieldset">
+                        <legend><label class="label w-100">Status </label></legend>
+                        <input type="text" class="form-control textbox status" formControlName="status" disabled />
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <div class="row mb-3 b-1-green">
+                    <div class="col-3">
+                        <div class="heading-text">
+                            Section Title
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="heading-text">
+                            Description
+                        </div>
+                    </div>
+                </div>
+
+                <div formArrayName="sections"
+                    *ngFor="let section of addQuestionnaireForm.get('sections')['controls']; let i = index; let last = last">
+                    <ng-container [formGroupName]="i">
+                        <div class="row mb-3">
+                            <div class="col-3">
+                                <fieldset class="w-fieldset">
+                                    <legend> <label class="label">Title</label></legend>
+                                    <input type="text" formControlName="sectionName" class="form-control textbox"
+                                        maxLength="100" (input)="editFlag ? secUpdated(i) : null" />
+                                </fieldset>
+                                <validation-message
+                                    [control]="addQuestionnaireForm.get('sections').controls[i].controls.sectionName">
+                                </validation-message>
+                            </div>
+                            <div class="col-8">
+                                <app-textarea class="section-desription" formControlName="sectionDescription" [rows]="1" [maxLengthT]="500"
+                                    (input)="editFlag ? secUpdated(i) : null"></app-textarea>
+                                <!-- <input type="text" formControlName="sectionDescription" class="form-control textbox"
+                                        maxLength="200" (input)="editFlag ? secUpdated(i) : null" /> -->
+                                <validation-message
+                                    [control]="addQuestionnaireForm.get('sections').controls[i].controls.sectionName">
+                                </validation-message>
+                            </div>
+                            <div class="col-1 mt-4">
+                                <div class="card icon-card-list red-bg mr-1" title="Remove"
+                                    *ngIf="addQuestionnaireForm.value.sections.length != 1">
+                                    <span class=" pointer-cursor size-15" title="Remove"
+                                        (click)="removeSection(i)">-</span>
+                                </div>
+
+                                <div class="card icon-card-list blue-bg" title="Add" *ngIf="last">
+                                    <span class="fa fa-plus pointer-cursor size-14" style="color:white;" title="Add"
+                                        (click)="addSection()"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="float-right">
+                        <button class="btn btn-secondary" type="button"
+                            (click)="backToList()">Cancel</button>&nbsp;&nbsp;
+                        <button class="btn btn-primary" type="button" (click)="next()">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

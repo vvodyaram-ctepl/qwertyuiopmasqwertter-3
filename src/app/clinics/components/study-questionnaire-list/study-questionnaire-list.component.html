@@ -1,0 +1,105 @@
+<div class="content-box">
+    <div class="content-hdr">
+        <div class="row">
+            <div class="col-6 block-left-center">
+                Study Questionnaires
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="content-blk">
+        <div class="content-banner mb-3">
+            <div class="row no-gutter" *ngIf="selectedStudy && selectedStudy != undefined">
+                <div class="col-6 block-left-center mb-2">
+                  <span class="banner-heading-text">{{selectedStudy.studyName}}</span>
+                  <span class="status-button" *ngIf="selectedStudy.status"
+              [ngClass]="selectedStudy.status == '1' ? 'active-bg' : 'inactive-bg'">{{selectedStudy.status == 1 ? 'Active' : 'Inactive'}}
+                  </span>
+                </div>
+              </div>
+            <!-- <div class="row no-gutter mt-3">
+                <div class="col-3">
+                    <div class="box-wrap mr-3">
+                        <div class="small-text">Pet Parent Name</div>
+                        <div class="green-small-text">Pet</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="box-wrap mr-3">
+                        <div class="small-text">Gender</div>
+                        <div class="green-small-text">Pet</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="box-wrap mr-3">
+                        <div class="small-text">Date Of Birth</div>
+                        <div class="green-small-text">Pet </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="box-wrap mr-3">
+                        <div class="small-text">Breed</div>
+                        <div class="green-small-text">Pet</div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+        <div class="custom-table mb-4">
+            <table>
+                <thead class="table-hdr">
+                    <tr>
+                        <th style="width:20%" *ngFor="let list of headers; let i = index">
+                            {{ list.label }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table-body" *ngIf="dataArr?.length > 0">
+                    <tr *ngFor="let list of dataArr; let i = index">
+                      
+                        <td *ngIf="list.isActive == 1">
+                            <a href="javascript:void(0)" (click)="openQuestions(list)" 
+                            class="control-icons ng-star-inserted">{{ list.questionnaireName }}</a>
+                        </td>
+                        <td *ngIf="list.isActive == 0">
+                            {{ list.questionnaireName }}
+                        </td>
+                         
+                        <td>
+                            {{ list.occurance}}
+                        </td>
+                        <td>
+                            {{ list.frequency}}
+                        </td>
+                        <td>
+                            {{ list.startDate }}
+                        </td>
+                        <td>
+                            {{ list.endDate }}
+                        </td>
+                        <td>
+                            <span *ngIf="list.isActive == 1" class="active-status">Active</span>
+                            <span *ngIf="list.isActive == 0" class="inactive-status">Inactive</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="table-body" *ngIf="dataArr?.length == 0">
+                    <tr>
+                        <td>No Records Found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="float-right">
+                    <button class="btn btn-secondary" type="button" routerLink="/user/clinics">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

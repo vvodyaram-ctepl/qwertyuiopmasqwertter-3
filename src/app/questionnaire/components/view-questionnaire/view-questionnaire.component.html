@@ -1,0 +1,123 @@
+<div class="content-box">
+    <div class="content-hdr">
+        <div class="row">
+            <div class="col-6 block-left-center">View Questionnaire
+                <!-- <span class="icon-star" *ngIf="!isFav" (click)="makeFav()"></span>
+                <span class="icon-star-filled" *ngIf="isFav" (click)="removeFav()"></span> -->
+            </div>
+            <div class="col-6 text-right">
+                <div class="float-right mb-2">
+                    <button *ngIf="RWFlag && !data.isPublished" class="btn btn-primary" type="button"
+                        (click)="editQuestionnaire()">Edit
+                        Questionnaire</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-blk">
+        <div class="content-banner mb-3">
+            <div class="row no-gutter border-1">
+                <div class="col-6 block-left-center mb-2">
+                    <span class="banner-heading-text mr-2">{{data.questionnaireName}}</span>
+                    <span class="status-button" *ngIf="data.questionnaireName"
+                        [ngClass]="!data.isActive ? 'inactive-bg': (!data.isPublished ? 'active-bg' : 'info-bg')">{{!data.isActive
+                        ?
+                        "Inactive" : (!data.isPublished ? "Draft" : "Published")}}</span>
+                    <span class="icon-star" *ngIf="!isFav" (click)="makeFav()"></span>
+                    <span class="icon-star-filled" *ngIf="isFav" (click)="removeFav()"></span>
+                </div>
+
+            </div>
+
+            <div class="row no-gutter pb-3 mt-3" [ngClass]="data?.sections?.length ? 'border-1' : ''">
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Type</div>
+                                <div class="green-small-text">{{data.questionnaireType }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3" *ngIf="data.questionnaireTypeId == 1">
+                                <div class="small-text">Level</div>
+                                <div class="green-small-text">{{data.questionnaireLevel || '-'}}</div>
+                            </div>
+                            <div class="box-wrap mr-3" *ngIf="data.questionnaireTypeId == 2">
+                                <div class="small-text">Category</div>
+                                <div class="green-small-text">{{data.questionnaireCategory || '-'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Start Date</div>
+                                <div class="green-small-text">{{data.startDate | date: 'MM/dd/yyyy'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">End Date</div>
+                                <div class="green-small-text">{{data.endDate | date: 'MM/dd/yyyy'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-container *ngIf="data?.sections?.length">
+                <div class="row no-gutter mt-3">
+                    <div class="col-5">
+                        <div class="box-wrap mr-3">
+                            <div class="small-text">Section Title</div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="box-wrap mr-3">
+                            <div class="small-text">Description</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row no-gutter mt-3" *ngFor="let section of data.sections">
+                    <div class="col-5">
+                        <div class="box-wrap mr-3">
+                            <div class="green-small-text">
+                                {{section.sectionName}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="box-wrap mr-3">
+                            <div class="green-small-text">
+                                <pre class="sectionDescription-align"
+                                    [innerHTML]="section?.sectionDescription || '-'"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="navtabsBackground">
+            <ul ngbNav class="row nav-tabs tabsDesign">
+                <li class="col" [ngbNavItem]="flatTab.name" *ngFor="let flatTab of flatTabs">
+                    <a ngbNavLink [routerLink]="flatTab.link" routerLinkActive="active-link" [queryParams]="queryParams"
+                        (click)="activateTab(flatTab)"><span>{{ flatTab.name }}</span></a>
+                </li>
+            </ul>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+</div>

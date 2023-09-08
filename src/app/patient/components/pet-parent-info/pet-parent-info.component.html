@@ -1,0 +1,399 @@
+<div class="content-box">
+  <div class="content-block">
+    <div class="row mb-4">
+      <div class="col-3">
+        <div class="d-inline-block mr-3">
+          <input type="radio" id="Existing_pet" name="recordtype" [(ngModel)]="recordtype" [value]="1">
+          &nbsp;<label for="Existing_pet">Existing Pet Parent</label><br>
+        </div>
+      </div>
+      <div class="col-3" *ngIf="internalStudy">
+        <div class="d-inline-block">
+          <input type="radio" id="new_pet" name="recordtype" [(ngModel)]="recordtype" [value]="2">
+          &nbsp;<label for="new_pet">Add New Pet Parent</label><br>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="recordtype == 1">
+      <form [formGroup]="existingpetInfoForm" novalidate>
+        <div class="row">
+          <div class="col-6 mb-3 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label w-100">Select Pet Parent Record</label></legend>
+              <lib-typeahead [data]="petParentArrList" matcher="petParentName" formControlName="petParent"
+                class="w-100 mb-0" placeholder="" class="w-100">
+              </lib-typeahead>
+            </fieldset>
+          </div>
+          <div class="col-2">
+            <button class="btn btn-primary submit-record" type="button" [disabled]="!addFilterFlag"
+              (click)="existingPetSubmit()">Save</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col mt-3">
+            <div class="custom-table mb-4">
+              <table>
+                <thead class="table-hdr">
+                  <tr>
+                    <th *ngIf="isPetWithPetParent">Is Pet with this Parent</th>
+                    <th *ngFor="let list of headers; let i = index">
+                      {{ list.label }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="table-body" *ngIf="existingPetParentArr?.length > 0">
+                  <tr *ngFor="let list of existingPetParentArr; let i = index">
+                    <td *ngIf="isPetWithPetParent">
+                      <ng-container *ngIf="list.residentialAddress">
+                        <input type="radio" id="{{list.ppId}}" name="isPetParentWithPet"
+                          [attr.checked]="list.isPetWithPetParent ? 'checked' : null"
+                          (change)="selectPetParentAddress('existingPetParentArr', i)">
+                      </ng-container>
+                    </td>
+                    <td>
+                      {{ list.petParentFirstName + ' ' + list.petParentLastName }}
+                    </td>
+                    <td>
+                      {{ list.ppEmail }}
+                    </td>
+                    <td>
+                      {{ list.phoneNumberValue }}
+                    </td>
+                    <td>
+                      {{ list.secondaryEmail || '-' }}
+                    </td>
+                    <td style="width:150px">
+                      {{list.residentialAddress || '-'}}
+                    </td>
+                    <td style="width:150px">
+                      <!-- {{list.isShipAddrSameAsResdntlAddr ? (list.residentialAddress || '-') : -->
+                      {{(list.shippingAddress ||
+                      '-')}}
+                    </td>
+                    <td style="display: flex;align-items: center;flex-direction: column;" *ngIf="addFilterFlag">
+                      <div class="card icon-card-list red-bg" title="Remove" (click)="deleteExPetArr(list)">
+                        <span class="pointer-cursor size-14" title="Remove">-</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody class="table-body" *ngIf="existingPetParentArr?.length == 0">
+                  <tr>
+                    <td>No Records Found</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="recordtype == 2">
+      <form [formGroup]="petInfoForm" (ngSubmit)="onSubmit(petInfoForm.value)">
+        <div class="row mb-3">
+          <div class="col-6 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Pet Parent First Name</label></legend>
+              <input formControlName="petParentFirstName" type="text" class="form-control textbox w-100"
+                maxlength="50" />
+            </fieldset>
+            <validation-message [control]="petInfoForm.controls.petParentFirstName"></validation-message>
+          </div>
+          <div class="col-6 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label" style="padding-right:0px">Pet Parent Last Name <span
+                    class="asterisk">*</span></label></legend>
+              <input formControlName="petParentLastName" type="text" class="form-control textbox w-100"
+                maxlength="50" />
+            </fieldset>
+            <validation-message [control]="petInfoForm.controls.petParentLastName"></validation-message>
+          </div>
+          <div class="col-4 mb-3 mobile-number">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Mobile</label></legend>
+              <div class="dropdown-container">
+                <select class="select-cstom-control form-control c-code" formControlName="phoneNumberCode"
+                  (change)="phoneCodeChange()">
+                  <option value="+1">US(+1)</option>
+                  <option value="+44">UK(+44)</option>
+                </select>
+
+                <input *ngIf="petInfoForm.value.phoneNumberCode == '+1'" type="text" formControlName="phoneNumberValue"
+                  id="phoneNumber" mask="(000)000-0000" [dropSpecialCharacters]="false" [showMaskTyped]="true"
+                  class="form-control textbox c-number" maxlength="" />
+
+                <input *ngIf="petInfoForm.value.phoneNumberCode == '+44'" type="text" formControlName="phoneNumberValue"
+                  id="phoneNumber" mask="00-0000-0000" [dropSpecialCharacters]="false" [showMaskTyped]="true"
+                  class="form-control textbox c-number" maxlength="" />
+
+              </div>
+            </fieldset>
+            <validation-message [control]="petInfoForm.controls.phoneNumberValue"></validation-message>
+          </div>
+          <div class="col-4 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Pet Parent Email <span class="asterisk">*</span></label></legend>
+              <input formControlName="ppEmail" type="text" class="form-control textbox w-100" maxlength=""
+                (blur)="checkDupEmail(petInfoForm.controls.ppEmail)" />
+            </fieldset>
+            <validation-message [control]="petInfoForm.controls.ppEmail"></validation-message>
+          </div>
+          <div class="col-4 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Secondary Email</label></legend>
+              <input type="text" class="form-control textbox w-100" formControlName="secondaryEmail"
+                (blur)="checkDupEmail(petInfoForm.controls.secondaryEmail)">
+            </fieldset>
+            <validation-message [messageToAppend]="" [control]="petInfoForm.controls.secondaryEmail">
+            </validation-message>
+          </div>
+          <div class="col-12">
+            <fieldset class="w-fieldset mb-3">
+              <legend>
+                <label class="label-hdr">Pet Parent Address</label>
+              </legend>
+              <div class="row" formGroupName="residentialAddress">
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Address Line 1 <span class="asterisk">*</span></label>
+                    </legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="address1" maxlength="50">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('residentialAddress').controls.address1">
+                  </validation-message>
+                </div>
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Address Line 2</label>
+                    </legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="address2" maxlength="50">
+                  </fieldset>
+                </div>
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">City <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="city"
+                      (blur)="validateAddress('residentialAddress')" maxlength="50">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('residentialAddress').controls.city">
+                  </validation-message>
+                </div>
+                <div class="col-3 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">State <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="state"
+                      (blur)="validateAddress('residentialAddress')" maxlength="50">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('residentialAddress').controls.state">
+                  </validation-message>
+                </div>
+                <div class="col-3 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Country <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="country"
+                      (blur)="validateAddress('residentialAddress')" maxlength="30">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('residentialAddress').controls.country">
+                  </validation-message>
+                </div>
+                <div class="col-3 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Zipcode <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="zipCode"
+                      (blur)="validateAddress('residentialAddress')">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('residentialAddress').controls.zipCode">
+                  </validation-message>
+                </div>
+                <div class="col-3 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Timezone </label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="timeZone" disabled>
+                  </fieldset>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="col-12 mb-3">
+            <fieldset>
+              <input type="checkbox" formControlName="isShipAddrSameAsResdntlAddr" (change)="onCheckShippingAddrss()" />
+              <label class="label ml-2">Shipping address is same as pet parent address</label>
+            </fieldset>
+          </div>
+          <div class="col-12" *ngIf="!petInfoForm.value.isShipAddrSameAsResdntlAddr">
+            <fieldset class="w-fieldset">
+              <legend>
+                <label class="label-hdr">Shipping Address</label>
+              </legend>
+              <div class="row mb-2" formGroupName="shippingAddress">
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Address Line 1 <span class="asterisk">*</span></label>
+                    </legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="address1" maxlength="50">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('shippingAddress').controls.address1">
+                  </validation-message>
+                </div>
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Address Line 2</label>
+                    </legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="address2" maxlength="50">
+                  </fieldset>
+                </div>
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">City <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="city"
+                      (blur)="validateAddress('shippingAddress')" maxlength="50">
+                  </fieldset>
+                  <validation-message [messageToAppend]="" [control]="petInfoForm.get('shippingAddress').controls.city">
+                  </validation-message>
+                </div>
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">State <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="state"
+                      (blur)="validateAddress('shippingAddress')" maxlength="50">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('shippingAddress').controls.state">
+                  </validation-message>
+                </div>
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Country <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="country"
+                      (blur)="validateAddress('shippingAddress')" maxlength="30">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('shippingAddress').controls.country">
+                  </validation-message>
+                </div>
+                <div class="col-4 mb-3">
+                  <fieldset class="w-fieldset">
+                    <legend> <label class="label">Zipcode <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="zipCode"
+                      (blur)="validateAddress('shippingAddress')">
+                  </fieldset>
+                  <validation-message [messageToAppend]=""
+                    [control]="petInfoForm.get('shippingAddress').controls.zipCode">
+                  </validation-message>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row mb-5">
+          <div class="col-12">
+            <div class="float-right">
+              <button class="btn btn-primary" type="button" [disabled]="!addFilterFlag" (click)="newPetSubmit()">
+                Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col mt-3">
+            <div class="custom-table mb-4">
+              <table>
+                <thead class="table-hdr">
+                  <tr>
+                    <th *ngIf="isPetWithPetParent">Is Pet with this Parent</th>
+                    <th *ngFor="let list of newPetheaders; let i = index">
+                      {{ list.label }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="table-body" *ngIf="newPetParentArr?.length > 0">
+                  <tr *ngFor="let list of newPetParentArr; let i = index">
+                    <td *ngIf="isPetWithPetParent">
+                      <ng-container *ngIf="list.residentialAddress?.timeZone">
+                        <input type="radio" id="P{{i}}" name="isPetParentWithPet"
+                          [attr.checked]="list.isPetWithPetParent ? 'checked' : null"
+                          (change)="selectPetParentAddress('newPetParentArr', i)">
+                      </ng-container>
+                    </td>
+                    <td>
+                      {{ list.petParentFirstName + ' ' + list.petParentLastName }}
+                    </td>
+                    <td>
+                      {{ list.ppEmail }}
+                    </td>
+                    <td>
+                      {{ list.phoneNumberValue ? list.phoneNumberCode + ' ' + list.phoneNumberValue : ''}}
+                    </td>
+                    <td>
+                      {{list.secondaryEmail || '-'}}
+                    </td>
+                    <td style="width:150px">
+                      {{list.residentialAddress?.address1 ?
+                      (list.residentialAddress?.address1 + ', ' +
+                      (list.residentialAddress?.address2 ?
+                      (list.residentialAddress?.address2 + ', ') : '') +
+                      list.residentialAddress?.city + ', ' +
+                      list.residentialAddress?.state + ', ' +
+                      list.residentialAddress?.country + ' - ' +
+                      list.residentialAddress?.zipCode + ' (' +
+                      list.residentialAddress?.timeZone + ')') : '-'}}
+                    </td>
+                    <td style="width:150px">
+                      {{list.isShipAddrSameAsResdntlAddr ?
+                      (list.residentialAddress?.address1 ?
+                      (list.residentialAddress?.address1 + ', ' +
+                      (list.residentialAddress?.address2 ?
+                      (list.residentialAddress?.address2 + ', ') : '') +
+                      list.residentialAddress?.city + ', ' +
+                      list.residentialAddress?.state + ', ' +
+                      list.residentialAddress?.country + ' - ' +
+                      list.residentialAddress?.zipCode) : '-')
+                      :
+                      list.shippingAddress?.address1 ?
+                      (list.shippingAddress?.address1 + ', ' +
+                      (list.shippingAddress?.address2 ?
+                      (list.shippingAddress?.address2 + ', ') : '') +
+                      list.shippingAddress?.city + ', ' +
+                      list.shippingAddress?.state + ', ' +
+                      list.shippingAddress?.country + ' - ' +
+                      list.shippingAddress?.zipCode) : '-'}}
+                    </td>
+                    <td style="display: flex;align-items: center;flex-direction: column;" *ngIf="addFilterFlag">
+                      <div class="card icon-card-list red-bg" title="Remove" (click)="deleteNewPetArr(list)">
+                        <span class="pointer-cursor size-14" title="Remove">-</span>
+                      </div>
+
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody class="table-body" *ngIf="newPetParentArr?.length == 0">
+                  <tr>
+                    <td>No Records Found</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="float-right">
+          <button class="btn btn-secondary" type="button" (click)="back()">
+            Back</button>&nbsp;&nbsp;
+          <button class="btn btn-primary" type="button" (click)="next()">
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+.review-hdr {
+    background: #babfbf;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    text-transform: uppercase;
+  }
+  
+  .header-text {
+    font-weight: 600;
+  }
+  
+  :host ::ng-deep .accordion {
+    .card-header .btn-link {
+      text-decoration: none;
+      color: black;
+      padding-left: 0;
+      width: 100%;
+      text-align: left;
+  
+      span.question,
+      span.section {
+        white-space: normal;
+        text-align: justify;
+        padding-left: 60px;
+        display: block;
+      }
+  
+      span.section {
+        font-weight: 500;
+      }
+    }
+  
+    .card,
+    .card:not(:first-of-type):not(:last-of-type) {
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      border-radius: 0.25rem;
+      margin-bottom: 10px;
+    }
+  }
+  
+  .checkbox-wrapper,
+  .radio-input-wrapper,
+  .text {
+    .check,
+    .radio {
+      position: absolute;
+    }
+  
+    .label {
+      margin-left: 30px;
+      cursor: pointer;
+      display: block;
+      padding-top: 4px;
+    }
+  }
+  
+  .radio-input-wrapper {
+    .radio {
+      height: 30px;
+      width: 16px;
+    }
+  }
+  
+  .text label {
+    width: 100%;
+  }
+  
+  .fa-drag-handle {
+    content: "\f142 \f142";
+    letter-spacing: 2px;
+  }
+  
+  .dropdown > select.form-control,
+  .addQues select.form-control {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 32px;
+    // background: #fff url(../../../../../assets/images/downArrow2.png) no-repeat right;
+  }
+  .error-message{
+    color: #c00;
+    text-transform: capitalize;
+    font-size: 14px;
+    margin-left: 25px;
+    font-family: 'Titillium Web';
+}
+.ques-footer{
+  border-top: 1px solid #ccc;
+  background: #f5f5f5 0% 0% no-repeat padding-box;
+  
+}
+:host ::ng-deep .study-questions-accordion .card-body{
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+}
+.validity-item{
+  padding-left: 130px;
+}

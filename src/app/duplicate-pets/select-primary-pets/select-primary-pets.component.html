@@ -1,0 +1,37 @@
+<div class="content-box">
+    <div class="content-blk">
+      <datatable  [headers]="headers" 
+        [hideExport]="true"  [filterTypeArr]="filterTypeArr" [genderList]="genderArray" 
+        [petsList]="petNamesList"
+        (resetEmitter)="reset($event)"
+        [breedsList]="breedArray" placeholder="Search" (selectedRecords)="selectedRecords($event)"
+        (selectedRecords)="selectedRecordsForVersion($event)" (formatter)="formatter($event)" defaultColumn="modifiedDate" dir="DESC" 
+        pageName="select-primary-duplicatepets"
+        url="/api/duplicatePets/getPrimaryPets"
+        (nodeAction)="getNode($event)">
+      </datatable>
+
+      <div class="row mb-3" >
+        <div class="col-12">
+            <!-- <button type="submit">submit</button>&nbsp;&nbsp; -->
+            <div class="float-right">
+                <button class="btn btn-secondary" type="button" routerLink="/user/patients"
+                    (click)="cancel()">
+                    Cancel
+                </button>&nbsp;&nbsp;
+                <button class="btn btn-primary" type="button" (click)="next()">Next</button>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+
+  <ng-template #primaryTemplate let-data="rowData" >
+    <div>
+      <!-- <span class="primary-pet">p</span>   -->
+      <label class="primary-select">
+        <input type="radio" name="radio" [checked]="data.isChecked" (click)="onPrimarySelect(data)">
+        <span class="checkmark-primary"></span>
+      </label>
+    </div>
+  </ng-template>

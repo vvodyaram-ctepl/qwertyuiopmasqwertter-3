@@ -1,0 +1,17 @@
+<div class="content-box">
+    <div class="content-hdr">
+        <div class="row">
+            <div class="col block-left-center">
+                <div>Customer Support Dashboard Report</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-blk" style="height: 87vh">
+        <ngx-spinner bdColor="rgba(0,0,0,.6)" class="mySpinner" *ngIf="loader">
+            <img src='assets/images/loader.gif' />
+        </ngx-spinner>
+        <iframe width="100%" height="100%" *ngIf="trustedReportUrl" [src]="trustedReportUrl" frameborder="0"
+            style="border:0" allowfullscreen></iframe>
+    </div>
+</div>

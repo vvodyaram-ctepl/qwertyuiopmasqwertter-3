@@ -1,0 +1,28 @@
+.custom-table{
+    background: #FFF;
+    padding: 15px;
+}
+.control-icons{
+    display: flex;
+    color: #37b57c;
+    font-weight: 600;
+}
+a:hover {
+    color: #37b57c;
+    text-decoration: none;
+}
+.inactive-status{
+    font: normal normal 600 15px/16px Titillium Web;
+    letter-spacing: -0.15px;
+    color: #cf5e1c;
+    padding: 0px 8px;
+    font-size: 13px;
+    text-transform: capitalize;
+    background: #ffe9e3 0% 0% no-repeat padding-box;
+    border: 1px solid #cf461c;
+    border-radius: 3px;
+    width: 85px !important;
+    display: inline-block;
+    line-height: 1.4 !important;
+    text-align: center;
+}

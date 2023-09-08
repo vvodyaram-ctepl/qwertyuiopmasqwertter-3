@@ -1,0 +1,115 @@
+    <div class="modal-header">
+      <button type="button" class="close" aria-label="Close" (click)="d('')">
+        <div class="close-wrapper">
+          <span aria-hidden="true" class="icon-close"></span>
+        </div>
+      </button>
+      <div class="heading">
+        <h5 class="modal-title" id="modal-basic-title">
+          Unassign Asset
+        </h5>
+      </div>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="unassignOrReplaceForm">
+        <div class="row mb-3">
+          <div class="col-12 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Reason <span class="asterisk">*</span></label></legend>
+              <select class="form-control w-100" formControlName="reason" (change)="onReasonChange()">
+                <option value="">Select</option>
+                <option *ngFor='let list of reasonArr' [value]="list.reasonId">{{list.reasonName}}</option>
+              </select>
+            </fieldset>
+            <validation-message [control]="unassignOrReplaceForm.controls.reason"></validation-message>
+          </div>
+          <div class="col-12 mb-3">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Unassigned On <span class="asterisk">*</span></label></legend>
+              <datepicker class="w-100" formControlName="unAssignedOn"
+                format="MM-DD-YYYY"></datepicker>
+            </fieldset>
+            <validation-message [control]="unassignOrReplaceForm.controls.unAssignedOn"></validation-message>
+          </div>
+          <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+            5">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Date of Death
+                  <span class="asterisk">*</span>
+                </label>
+              </legend>
+              <datepicker class="w-100" formControlName="dateOfDeath" format="MM-DD-YYYY" [maxDate]="currentDate">
+              </datepicker>
+            </fieldset>
+            <validation-message [control]="unassignOrReplaceForm.controls.dateOfDeath"></validation-message>
+          </div>
+          <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+            5">
+            <div class="checkbox-wrapper">
+              <label>
+                <input type="checkbox" class="check checkbox-width-20" formControlName="isApproximateDateOfDeath" />
+                <span class="label" style="margin-top: -31px;
+                display: block;
+                margin-left: 27px;">
+                  Approximate
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+            4">
+            <fieldset class="w-fieldset">
+              <legend><label class="label">Date of Lost to Follow Up
+                  <span class="asterisk">*</span>
+                </label>
+              </legend>
+              <datepicker class="w-100" formControlName="lostToFollowUpDate" format="MM-DD-YYYY" [maxDate]="currentDate">
+              </datepicker>
+            </fieldset>
+            <validation-message [control]="unassignOrReplaceForm.controls.lostToFollowUpDate"></validation-message>
+          </div>
+          <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.reason ==
+            4">
+            <div class="checkbox-wrapper">
+              <label>
+                <input type="checkbox" class="check checkbox-width-20" formControlName="isApproxLostToFollowUpDate" />
+                <span class="label" style="margin-top: -31px;
+                display: block;
+                margin-left: 27px;">
+                  Approximate
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="col-12 mb-3" *ngIf="unassignOrReplaceForm.value.studiesMappedToSameDevice.length">
+            <h4>Unassign for other Studies</h4>
+            <hr class="mt-0">
+            <ng-container formArrayName="studiesMappedToSameDevice" *ngFor="let studies of
+              unassignOrReplaceForm?.get('studiesMappedToSameDevice')['controls'];
+              let i= index">
+              <div class="checkbox-wrapper" [formGroupName]="i">
+                <label>
+                  <input type="checkbox" class="check checkbox-width-20" formControlName="isChecked"
+                  />
+                  <span class="label" style="margin-top: -31px; display: block;
+                  margin-left: 27px;">
+                    {{studies.value.studyName}}
+                  </span>
+                </label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 mb-4">
+            <button type="button" class="btn btn-secondary btn-custom float-right"
+              (click)="d('')">
+              No
+            </button>&nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary btn-custom float-right mr-3" (click)="submit()">
+              Yes
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>

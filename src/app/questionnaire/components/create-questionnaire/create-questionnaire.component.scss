@@ -1,0 +1,25 @@
+.status {
+    background-color: #fff !important;
+}
+
+.b-1-green {
+    border-bottom: 1px solid #37b57c;
+
+    .heading-text {
+        font: normal normal bold 18px/24px Titillium Web;
+        letter-spacing: -0.36px;
+        color: #00cf99;
+        text-transform: uppercase;
+        opacity: 1;
+    }
+}
+
+::ng-deep .section-desription textarea.form-control {
+    height: calc(1.5em + .75rem + 2px) !important;
+}
+
+.blue-bg {
+    width: auto;
+    height: auto;
+    padding: 4.8px;
+}

@@ -1,0 +1,149 @@
+app-data-streams{
+.btn-stitch{
+    min-width: 235px !important;
+}
+.custom-table table td > span{
+  font-size: 12px;
+  line-height: 1.3;
+}
+.primary-pet {
+    color: white !important;
+    display: inline-block;
+    width: 20px;
+    background: #0fd6a8;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    position: absolute;
+    margin-top: -5px;
+    height: 20px;
+    line-height: 0.5 !important;
+}
+.duplicate-pet{
+    color: white !important;
+    display: inline-block;
+    width: 20px;
+    background: orange;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    position: absolute;
+    margin-top: -5px;
+    height: 20px;
+    line-height: 0.5 !important;
+}
+
+.primary-pet2 {
+  color: white !important;
+  display: inline-block;
+  width: 20px;
+  background: #0fd6a8;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px;
+  position: absolute;
+  margin-top: 5px;
+  height: 20px;
+  line-height: 0.5 !important;
+}
+.duplicate-pet2{
+  color: white !important;
+  display: inline-block;
+  width: 20px;
+  background: orange;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 12px;
+  position: absolute;
+  margin-top: 5px;
+  height: 20px;
+  line-height: 0.5 !important;
+}
+.chk-container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-top: -7px;
+  }
+  
+  /* Hide the browser's default checkbox */
+  .chk-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  /* Create a custom checkbox */
+  .checkmark {
+    position: absolute;
+    top: 3px;
+    left: 25px;
+    height: 16px;
+    width: 16px;
+    background-color: #fff;
+    border:1px solid #00cf99;
+    border-radius: 3px;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .chk-container:hover input ~ .checkmark {
+    background-color: #fff;
+    border:1px solid #00cf99;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .chk-container input:checked ~ .checkmark {
+    background-color: #fff;
+  }
+  
+  /* Create the checkmark/indicator (hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the checkmark when checked */
+  .chk-container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the checkmark/indicator */
+  .chk-container .checkmark:after {
+    left: 4.5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  .boxItem{
+    margin-top: 0px !important;
+  }
+  .input-date input{
+		height: 30px;
+		margin-top: 3px;
+		border-radius: 5px;
+	}
+	.input-date i{
+		position: absolute;
+		top: 0px;
+		right: 10px;
+		cursor: pointer;
+	}
+
+  .card.icon-card-list{
+    line-height: 0.8;
+    margin-top: -6px;
+    float: right;
+  }
+}

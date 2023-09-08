@@ -1,0 +1,250 @@
+//app-view-pet-data-extract{
+    :host ::ng-deep datepicker .form-control{
+        border-radius: 7px;
+    }
+    datepicker .close-icon {
+        top: 1px;
+    }
+
+    .timeline-horizontal {
+        list-style: none;
+        position: relative;
+        padding: 20px;
+        width: 90%;
+        margin-top: 100px;
+        margin-bottom: 35px;
+        display: inline-flex;
+
+        .timeline-item {
+            display: inline-block;
+            position: relative;
+
+            &:not(:last-child):before {
+                height: 3px;
+                top: auto;
+                left: 24px;
+                right: 0;
+                width: calc(100% - 14px);
+                position: absolute;
+                content: " ";
+                background-color: #eeeeee;
+                bottom: 10px;
+                display: flex;
+            }
+
+            .timeline-badge {
+                color: #fff;
+                width: 14px;
+                height: 14px;
+                line-height: 52px;
+                font-size: 22px;
+                text-align: center;
+                position: absolute;
+                top: auto;
+                bottom: 4px;
+                left: 35px;
+                margin-left: -25px;
+                background-color: #e8bf5f;
+                border: 3px solid #e8bf5f;
+                z-index: 100;
+                border-radius: 50%;
+            }
+
+            .timeline-panel {
+                position: absolute;
+                top: auto;
+                bottom: 8px;
+                float: none !important;
+                left: -74px !important;
+                right: 0 !important;
+                width: 185px;
+                margin-bottom: 20px;
+                border: 0.25px solid #b8c5d3;
+                background: #fcefd0;
+                border-radius: 5px;
+                padding: 10px;
+                font-size: 12px;
+
+                &:before {
+                    position: absolute;
+                    display: inline-block;
+                    top: auto;
+                    bottom: -8px;
+                    left: 82px !important;
+                    right: auto;
+                    border-top: 8px solid #333 !important;
+                    border-bottom: 0 solid #333 !important;
+                    border-right: 8px solid transparent !important;
+                    border-left: 8px solid transparent !important;
+                    content: " ";
+                }
+
+                .device-number {
+                    color: #b78207;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+                }
+
+                .stream-date,
+                .asset-model {
+                    color: #707070;
+                    font-weight: bold;
+                    margin-bottom: 3px;
+
+                    label {
+                        font-weight: normal;
+                        margin-bottom: 0px;
+                    }
+                }
+            }
+
+            &.active-device {
+                .timeline-badge {
+                    background-color: #37b57b !important;
+                    border: 3px solid #37b57b !important;
+                }
+
+                .timeline-panel {
+                    background: #ebfbfd !important;
+
+                    .device-number {
+                        color: #37b57b !important;
+                    }
+                }
+            }
+        }
+    }
+    .primary-pet {
+        color: white !important;
+        display: inline-block;
+        width: 18px;
+        background: #0fd6a8;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 12px;
+        position: absolute;
+        margin-top: 10px;
+        height: 20px;
+        line-height: 0.5 !important;
+      }
+      .duplicate-pet{
+        color: white !important;
+        display: inline-block;
+        width: 18px;
+        background: orange;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 12px;
+        position: absolute;
+        margin-top: 10px;
+        height: 20px;
+        line-height: 0.5 !important;
+      }
+
+      .primary-pet-view {
+        color: white !important;
+        display: inline-block;
+        width: 18px;
+        background: #0fd6a8;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 12px;
+        // position: absolute;
+        // margin-top: 10px;
+        height: 18px;
+        //line-height: 0.5 !important;
+      }
+      .duplicate-pet-view{
+        color: white !important;
+        display: inline-block;
+        width: 18px;
+        background: orange;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 12px;
+        // position: absolute;
+        // margin-top: 10px;
+        height: 18px;
+        //line-height: 0.5 !important;
+      }
+       
+      .custom-table table td > span{
+        font-size: 12px;
+        line-height: 1.3;
+      }
+      .exclude-chkbox{
+        margin-left: 10px;
+        margin-bottom: 20px;
+      }
+
+      .chk-container {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      
+      /* Hide the browser's default checkbox */
+      .chk-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+      
+      /* Create a custom checkbox */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 16px;
+        width: 16px;
+        background-color: #fff;
+        border:1px solid #00cf99;
+        border-radius: 3px;
+      }
+      
+      /* On mouse-over, add a grey background color */
+      .chk-container:hover input ~ .checkmark {
+        background-color: #fff;
+        border:1px solid #00cf99;
+      }
+      .chk-container input:disabled ~ .checkmark {
+        opacity: 0.5;
+      }
+      
+      /* When the checkbox is checked, add a blue background */
+      .chk-container input:checked ~ .checkmark {
+        background-color: #fff;
+      }
+      
+      /* Create the checkmark/indicator (hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+      
+      /* Show the checkmark when checked */
+      .chk-container input:checked ~ .checkmark:after {
+        display: block;
+      }
+      
+      /* Style the checkmark/indicator */
+      .chk-container .checkmark:after {
+        left: 4.5px;
+        top: 1px;
+        width: 5px;
+        height: 10px;
+        border: solid black;
+        border-width: 0 2px 2px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+ 
+//}

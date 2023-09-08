@@ -1,0 +1,153 @@
+<div class="content-block">
+    <div class="row mb-3">
+        <div class="col-12">
+            <ng-container *ngIf="data?.sections.length; else questionsWithoutSectionsTemplate">
+                <ngb-accordion [closeOthers]="true" class="sections-accordion">
+                    <ng-container *ngFor="let section of data.sections; let i = index">
+                        <ngb-panel id="{{i}}"
+                            *ngIf="data.sectionWiseQuestions && data?.sectionWiseQuestions[i][section.sectionName]?.length">
+                            <ng-template ngbPanelTitle>
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex flex-column pr-4">
+                                        <small class="mb-2 font-weight-bold">Section {{i+1}} of
+                                            {{data.sections.length}}</small>
+                                        <span class="section mb-2 pl-0"
+                                            *ngIf="section.sectionName">{{section?.sectionName}}
+                                        </span>
+                                        <pre class="sectionDescription-align text-small"
+                                            [innerHTML]="section?.sectionDescription"></pre>
+                                    </div>
+                                    <div class="d-flex my-auto"><i class="icon-right-arrow"></i></div>
+                                </div>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <ng-container [ngTemplateOutlet]="questionsTemplate"
+                                    [ngTemplateOutletContext]="{questions: data.sectionWiseQuestions[i][section.sectionName]}"></ng-container>
+                            </ng-template>
+                        </ngb-panel>
+                    </ng-container>
+                </ngb-accordion>
+            </ng-container>
+
+
+            <div class="row " *ngIf="data?.questions.length == 0">
+                <div class="col-12">
+                    No Questions Found.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-3">
+            <div class="float-right">
+                <button class="btn btn-primary" type="button" (click)="back()">Back</button>&nbsp;&nbsp;
+                <!-- <button class="btn btn-primary" type="button" (click)="cancel()">Cancel</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #questionsWithoutSectionsTemplate>
+    <ng-container [ngTemplateOutlet]="questionsTemplate"
+        [ngTemplateOutletContext]="{questions: data?.questions}"></ng-container>
+</ng-template>
+
+<ng-template #questionsTemplate let-questions="questions">
+    <ngb-accordion [closeOthers]="true" class="questions-accordion">
+        <ngb-panel id="{{i}}" *ngFor="let ques of questions; let i = index">
+            <ng-template ngbPanelTitle>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex flex-column pr-4">
+                        <div>
+                            <span class="position-absolute">
+                                <b>{{"Q" + ques.questionOrder}}</b>
+                            </span>
+                            <span class="question mb-2">{{ques.question}}
+                                <span *ngIf="ques.isMandatory" class="asterisk">*</span>&nbsp;&nbsp;
+                                <span>({{ques.questionType}})</span>
+                            </span>
+                        </div>
+                        <img src="{{ques.questionImageUrl}}" width="100px" class="img-fluid ml-5"
+                            *ngIf="ques.questionImageUrl">
+                        <div class="ml-5"
+                            *ngIf="ques.suffleOptionOrder || ques.validityPeriod || ques.isIncludeInDataExtract">
+                            <ul class="my-1">
+                                <li *ngIf="ques.suffleOptionOrder">Shuffle Option Order</li>
+                                <li *ngIf="ques.isIncludeInDataExtract">Include In Data Extract</li>
+                                <li *ngIf="ques.validityPeriod">Validity - {{ques.validityPeriod}} days</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex my-auto"><i class="icon-right-arrow"></i></div>
+                </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+                <div class="row"
+                    *ngIf="ques.questionTypeId == 1 || ques.questionTypeId == 2 || ques.questionTypeId == 3">
+                    <div class="col-12 mb-2" *ngFor="let opt of ques.questionAnswerOptions; let optionIndex = index">
+                        <div class="row">
+                            <div class="col-12">
+                                {{optionIndex + 1}}. {{opt.questionAnswer}}<br>
+                                <img *ngIf="opt.ansOptionMediaUrl" [src]="opt.ansOptionMediaUrl"
+                                    class="img-fluid ml-3 mt-2" width="100px">
+                            </div>
+                            <div class="col-12" *ngIf="opt.submitQuestionnaire || opt.skipTo >= 0">
+                                <ul class="my-1">
+                                    <li *ngIf="opt.submitQuestionnaire">Submit Questionnaire</li>
+                                    <li *ngIf="opt.skipTo >= 0">
+                                        <b>Skip To: </b>{{getQuestion(opt.skipTo)}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row"
+                    *ngIf="ques.questionTypeId == 4 || ques.questionTypeId == 5 || ques.questionTypeId == 9">
+                    <div class="col-12">
+                        <div class="text" *ngIf="ques.questionTypeId == 4">
+                            <label>
+                                <input type="text" class="form-control d-inline-block" disabled>
+                            </label>
+                        </div>
+
+                        <div class="text" *ngIf="ques.questionTypeId == 5">
+                            <label>
+                                <textarea class="form-control d-inline-block" disabled></textarea>
+                            </label>
+                        </div>
+
+                        <div class="text" *ngIf="ques.questionTypeId == 9">
+                            <label>
+                                <input type="text" placeholder="MM-DD-YYYY" class="form-control d-inline-block"
+                                    disabled>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="ques.questionTypeId == 6">
+                    <div *ngFor="let opt of ques.questionAnswerOptions">
+                        <div class="row">
+                            <div class="col-3 m-auto">
+                                {{opt.questionAnswer}}
+                            </div>
+                            <div class="col-9">
+                                <div class="custom-slider" [ngClass]="ques.other.vertical ? 'vertical' : ''">
+                                    <ngx-slider [options]="ques.other"></ngx-slider>
+                                    <p class="floorDesc">{{ques.other.floorDescription}}</p>
+                                    <p class="ceilDesc">{{ques.other.ceilDescription}}</p>
+                                    <!-- Used legends for showing tickstep values, as tickstepvalues: true not working if the floor value does not start with 0. Hence used legends for showing tick steps. Also, floorDescription and ceilDescription are legends, but defined custom css as the legends are used to display the tick steps and also if we put the descriptions in legends, it does not work for continuous scales -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="ques.questionTypeId == 7 || ques.questionTypeId == 8">
+                    <div class="col-12">
+                        <div class="cloud-img ml-4"><i class="icon-upload size-40"></i></div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</ng-template>

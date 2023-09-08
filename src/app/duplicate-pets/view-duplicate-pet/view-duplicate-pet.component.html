@@ -1,0 +1,113 @@
+<div class="content-box">
+    <div class="content-hdr">
+        <div class="row">
+            <div class="col-6 block-left-center"> View Duplicate Pet</div>
+        </div>
+    </div>
+    <div class="content-blk">
+        <div class="content-block">
+            <div class="row">
+                <div class="col custom-table">
+                    <table class="table mt-3" *ngFor="let list of viewDuplicatePetArray; let i = index">
+                        <thead class="table-hdr">
+                            <tr>
+                                <th width="3%">
+                                  <img src="../../../../assets/images/history.png" title="History" alt="History" width="25px"
+                                            class="mr-1 img-fluid pointer-cursor" (click)="getHistory(list);
+                                            tooltipHover= [true]">
+                                </th>
+                                
+                                <th width="10%">STREAM</th>
+                                <th width="10%">PET</th>
+                                <th width="10%">STUDY</th>
+                                <th width="15%">ASSET NUMBER</th>
+                                <th width="9%">START DATE</th>
+                                <th width="9%">END DATE</th>
+                                <th width="9%">EXTRACT START DATE</th>
+                                <th width="8%">EXTRACT END DATE</th>
+                                <th width="8%">Exclude From Data Extract</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <tr *ngFor="let stream of list; let j=index">
+                                <td [ngClass]="stream.petType =='P' ?  'primary-pet' : 'duplicate-pet'">
+                                    <span>{{stream.petType}}</span>
+                                  </td>
+                                 
+                                <td>{{stream.streamId}}</td>
+                                <td>{{stream.petName}}</td>
+                                <td>{{stream.studyName}}</td>
+                                <td>{{stream.assetNumber}}</td>
+                                <td>{{(stream.startDate ? stream.startDate : '-') || ''}}</td>
+                                <td>{{(stream.endDate ? stream.endDate : '-') || ''}}</td>
+                                <td>{{stream.extractStartDate || '-'}}</td>
+                                <td>{{stream.extractEndDate || '-'}}</td>
+                                <td>{{ stream.petType == 'P' ? (stream.excludeFromDataExtract == 1 ? 'Yes' : 'No') : (stream.dupExcludeFromDataExtract == 1 ? 'Yes' : 'No')}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody class="table-body" *ngIf="viewDuplicatePetArray?.length == 0">
+                            <tr>
+                                <td>No Records Found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3">
+                    <div class="float-right">
+                        <button class="btn btn-secondary" type="button" (click)="backToList()">Close</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<ng-template #historyContent let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <div class="close-wrapper">
+        <span aria-hidden="true" class="icon-close"></span>
+      </div>
+    </button>
+    <div class="heading">
+      <h5 class="modal-title" id="modal-basic-title">
+        {{streamHistory[0].dataStreamId}} History<span class="ml-2 font-weight-normal">Assets:
+          {{streamHistory.length}}</span>
+      </h5>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-11">
+        <b style="margin-top: 97px; float: left; clear: both;">Assigned</b>
+        <ul class="timeline-horizontal">
+          <ng-container *ngFor="let points of streamHistory;let i= index; let
+            last= last">
+            <li class="timeline-item" [ngClass]="'active-device' " [ngStyle]="{ 'width': !last ?
+              (97/(streamHistory.length-1))+'%' : ''}">
+              <div class="timeline-badge pointer-cursor" (mouseenter)="onHoverStream(i)"
+                (mouseleave)="onHoverStream(i)">
+              </div>
+              <div class="timeline-panel" [ngStyle]="{'display': tooltipHover[i] ? 'block' : 'none'}">
+                <div class="device-number"> {{points.assetNumber}}</div>
+                <div class="stream-date"><label>Extract Start Date:</label> {{getFormatted(points.startDate)}}</div>
+                <div class="stream-date"><label>Extract End Date:</label> {{getFormatted(points.endDate)}}</div>
+                <div class="asset-model"><label>Stream:</label>
+                  {{points.stream}}</div>
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 mb-4">
+        <button type="button" class="btn btn-secondary btn-custom float-right" (click)="d('Cross click')">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

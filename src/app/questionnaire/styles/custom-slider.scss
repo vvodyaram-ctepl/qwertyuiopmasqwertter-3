@@ -1,0 +1,129 @@
+/*Slider Scale Custom Style Start*/
+::ng-deep .custom-slider {
+    .floorDesc {
+        position: absolute;
+        left: 0px;
+        bottom: -17px;
+        display: inline-block;
+    }
+    .ceilDesc {
+        position: absolute;
+        bottom: -17px;
+        right: 0px;
+    }
+
+    &.vertical {
+        .floorDesc {
+            bottom: 13px;
+            left: 54px;
+        }
+        .ceilDesc {
+            top: -7px;
+            left: 54px;
+        }
+    }
+    .ngx-slider {
+        margin-bottom: 30px !important;
+        .ngx-slider-bar {
+            // background: #ffe4d1;
+            background: #999;
+            height: 2px;
+        }
+        .ngx-slider-pointer {
+            width: 8px;
+            height: 16px;
+            top: auto; /* to remove the default positioning */
+            bottom: 0;
+            background-color: #999 !important;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+            &:after {
+                display: none;
+            }
+        }
+        .ngx-slider-bubble {
+            bottom: 14px;
+        }
+        .ngx-slider-tick {
+            width: 2px;
+            height: 10px;
+            margin-left: 4px;
+            border-radius: 0;
+            // background: #ffe4d1;
+            background-color: #999;
+            top: -1px;
+        }
+        .ngx-slider-ticks-values-under .ngx-slider-tick-value {
+            bottom: auto !important;
+            top: -34px !important;
+        }
+        .ngx-slider-tick-legend {
+            top: auto !important;
+            bottom: 24px !important;
+            font-size: 12px;
+        }
+        &.animate .ngx-slider-bubble.ngx-slider-limit {
+            bottom: 21px;
+            color: black;
+            font-size: 12px;
+
+            &.ngx-slider-ceil {
+                left: unset !important;
+                right: -10px;
+            }
+        }
+        .ngx-slider-floor {
+            opacity: 1 !important;
+            left: -1px !important;
+        }
+        &.vertical {
+            height: 250px;
+            .ngx-slider-ticks {
+                top: -11px !important;
+                left: 9px !important;
+
+                .ngx-slider-tick {
+                    width: 10px;
+                    height: 2px;
+                    top: 2px;
+
+                    .ngx-slider-tick-legend {
+                        right: 23px;
+                        bottom: -11px !important;
+                    }
+                }
+            }
+            .ngx-slider-bar-wrapper {
+                left: 13px;
+            }
+            .ngx-slider-pointer {
+                width: 16px;
+                height: 8px;
+                border-bottom-left-radius: 0px;
+                border-top-left-radius: 0px;
+                border-bottom-right-radius: 5px;
+                border-top-right-radius: 5px;
+                margin-left: 15px;
+            }
+            .ngx-slider-bubble {
+                &.ngx-slider-limit {
+                    &.ngx-slider-floor {
+                        left: -14px !important;
+                        bottom: -4px !important;
+                    }
+                    &.ngx-slider-ceil {
+                        right: 4px !important;
+                        bottom: 238px !important;
+                    }
+                }
+            }
+            .ngx-slider-bar {
+                width: 2px !important;
+            }
+        }
+    }
+    .ngx-slider-model-value {
+        display: none !important;
+    }
+}
+/*Slider Scale Custom Style End*/

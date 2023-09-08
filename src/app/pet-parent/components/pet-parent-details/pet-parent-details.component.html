@@ -1,0 +1,285 @@
+<div class="content-block">
+    <!-- {{addPetParentForm.value | json}} -->
+    <!-- 
+    {{addPetParentForm.valid | json}} -->
+    <div class="labelItem" *ngIf="viewFlag && petParentDetails">
+        <div class="row ">
+            <div class="col-3 mb-3">
+                <label>Pet Parent Name</label>
+            </div>
+            <div class="col-6 mb-3">
+                {{petParentDetails.petParentName}}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-3 mb-3">
+                <label>Email ID</label>
+            </div>
+            <div class="col-6 mb-3">
+                {{petParentDetails.email}}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-3 mb-3">
+                <label>Mobile</label>
+            </div>
+            <div class="col-6 mb-3">
+                {{petParentDetails.phoneNumber}}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-3 mb-3">
+                <label>Shipping Address</label>
+            </div>
+            <div class="col-6 mb-3">
+                {{petParentDetails.shippingAddress}}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-3 mb-3">
+                <label>Status</label>
+            </div>
+            <div class="col-6 mb-3">
+                {{petParentDetails.status == 1 ? 'Active': 'Inactive'}}
+            </div>
+        </div>
+    </div>
+
+    <form [formGroup]="addPetParentForm" novalidate>
+        <div class="row mb-2" *ngIf="!viewFlag">
+            <div class="col-6 mb-3">
+                <fieldset class="w-fieldset">
+                    <legend> <label class="label">Pet Parent First Name</label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="petParentFirstName">
+                </fieldset>
+                <validation-message [messageToAppend]="" [control]="addPetParentForm.controls.petParentFirstName">
+                </validation-message>
+            </div>
+            <div class="col-6 mb-3">
+                <fieldset class="w-fieldset">
+                    <legend> <label class="label">Pet Parent Last Name <span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="petParentLastName">
+                </fieldset>
+                <validation-message [messageToAppend]="" [control]="addPetParentForm.controls.petParentLastName">
+                </validation-message>
+            </div>
+            <div class="col-6 mb-3 mobile">
+                <fieldset class="w-fieldset">
+                    <legend> <label class="label">Mobile</label></legend>
+                    <!-- <input type="text" class="form-control textbox w-100" formControlName="mobile"> -->
+                    <div class="dropdown-container">
+                        <select style="width:30%;float:left" class="select-cstom-control form-control"
+                            (change)="phoneCodeChange()" formControlName="phoneNumberCode">
+                            <option value="+1">US(+1)</option>
+                            <option value="+44">UK(+44)</option>
+                        </select>
+                        <input *ngIf="addPetParentForm.value.phoneNumberCode == '+1'" style="width:70%" type="text"
+                            formControlName="phoneNumberValue" id="phoneNumber" mask="(000)000-0000"
+                            [dropSpecialCharacters]="false" [showMaskTyped]="true" class="form-control textbox"
+                            maxlength="" />
+
+                        <input *ngIf="addPetParentForm.value.phoneNumberCode == '+44'" style="width:70%" type="text"
+                            formControlName="phoneNumberValue" id="phoneNumber" mask="00-0000-0000"
+                            [dropSpecialCharacters]="false" [showMaskTyped]="true" class="form-control textbox"
+                            maxlength="" />
+                    </div>
+                </fieldset>
+                <validation-message [messageToAppend]="" [control]="addPetParentForm.controls.phoneNumberValue">
+                </validation-message>
+            </div>
+            <div class="col-6 mb-3">
+                <fieldset class="w-fieldset">
+                    <legend> <label class="label">Email<span class="asterisk">*</span></label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="email"
+                        (blur)="checkDupEmail()">
+                </fieldset>
+                <validation-message [messageToAppend]="" [control]="addPetParentForm.controls.email">
+                </validation-message>
+            </div>
+            <div class="col-6 mb-3">
+                <fieldset class="w-fieldset">
+                    <legend> <label class="label">Secondary Email</label></legend>
+                    <input type="text" class="form-control textbox w-100" formControlName="secondaryEmail"
+                        (blur)="checkDupEmail()">
+                </fieldset>
+                <validation-message [messageToAppend]="" [control]="addPetParentForm.controls.secondaryEmail">
+                </validation-message>
+            </div>
+            <div class="col-6 mb-3">
+                <fieldset class="w-fieldset">
+                    <legend><label class="label w-100">Status <span class="asterisk">*</span></label></legend>
+
+                    <select class="form-control w-100" formControlName="status">
+                        <option value="">Select</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+
+                </fieldset>
+                <validation-message [messageToAppend]="" [control]="addPetParentForm.controls.status">
+                </validation-message>
+            </div>
+        </div>
+        <div *ngIf="!viewFlag">
+            <fieldset class="w-fieldset mb-3">
+                <legend>
+                    <label class="label-hdr">Pet Parent Address</label>
+                </legend>
+                <div class="row" formGroupName="residentialAddress">
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Address Line 1 <span class="asterisk">*</span></label>
+                            </legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="address1"
+                                maxlength="50">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('residentialAddress').controls.address1">
+                        </validation-message>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Address Line 2</label>
+                            </legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="address2"
+                                maxlength="50">
+                        </fieldset>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">City <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="city"
+                                (blur)="validateAddress('residentialAddress')" maxlength="50">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('residentialAddress').controls.city">
+                        </validation-message>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">State <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="state"
+                                (blur)="validateAddress('residentialAddress')" maxlength="50">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('residentialAddress').controls.state">
+                        </validation-message>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Country <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="country"
+                                (blur)="validateAddress('residentialAddress')" maxlength="30">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('residentialAddress').controls.country">
+                        </validation-message>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Zipcode <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="zipCode"
+                                (blur)="validateAddress('residentialAddress')">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('residentialAddress').controls.zipCode">
+                        </validation-message>
+                    </div>
+                    <div class="col-3 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Timezone </label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="timeZone" disabled>
+                        </fieldset>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <fieldset>
+                        <input type="checkbox" formControlName="isShipAddrSameAsResdntlAddr"
+                            (change)="onCheckShippingAddrss()" />
+                        <label class="label ml-2">Shipping address is same as pet parent address</label>
+                    </fieldset>
+                </div>
+            </div>
+            <fieldset class="w-fieldset" *ngIf="!addPetParentForm.value.isShipAddrSameAsResdntlAddr">
+                <legend>
+                    <label class="label-hdr">Shipping Address</label>
+                </legend>
+                <div class="row mb-2" formGroupName="shippingAddress">
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Address Line 1 <span class="asterisk">*</span></label>
+                            </legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="address1"
+                                maxlength="50">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('shippingAddress').controls.address1">
+                        </validation-message>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Address Line 2</label>
+                            </legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="address2"
+                                maxlength="50">
+                        </fieldset>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">City <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="city"
+                                (blur)="validateAddress('shippingAddress')" maxlength="50">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('shippingAddress').controls.city">
+                        </validation-message>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">State <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="state"
+                                (blur)="validateAddress('shippingAddress')" maxlength="50">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('shippingAddress').controls.state">
+                        </validation-message>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Country <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="country"
+                                (blur)="validateAddress('shippingAddress')" maxlength="30">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('shippingAddress').controls.country">
+                        </validation-message>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <fieldset class="w-fieldset">
+                            <legend> <label class="label">Zipcode <span class="asterisk">*</span></label></legend>
+                            <input type="text" class="form-control textbox w-100" formControlName="zipCode"
+                                (blur)="validateAddress('shippingAddress')">
+                        </fieldset>
+                        <validation-message [messageToAppend]=""
+                            [control]="addPetParentForm.get('shippingAddress').controls.zipCode">
+                        </validation-message>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="row">
+            <div class="col-12 mt-3">
+                <div class="float-right">
+                    <button class="btn btn-secondary" type="button" routerLink="/user/petparent"
+                        [queryParams]="queryParams">
+                        Cancel
+                    </button>&nbsp;&nbsp;
+                    <button *ngIf="!editFlag" class="btn btn-primary" type="button" (click)="submit()">Submit</button>
+                    <button *ngIf="editFlag" class="btn btn-primary" type="button" (click)="next()">Next</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

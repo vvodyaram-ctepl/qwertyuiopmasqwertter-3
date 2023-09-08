@@ -1,0 +1,319 @@
+<div class="content-box">
+    <div class="content-hdr">
+        <div class="row">
+            <div class="col-6 block-left-center"> View Pet Parent</div>
+            <!-- <div class="col-6 text-right"><button class="btn btn-primary" type="button" (click)="addPetParent()">Add
+                    Pet Parent</button></div> -->
+            <div class="col-6 text-right">
+                <div class="float-right">
+                    <button *ngIf="RWFlag" class="btn btn-primary" type="button" (click)="editPetParent()">Edit Pet
+                        Parent</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-blk">
+        <div class="content-banner mb-3">
+            <div class="row no-gutter border-1">
+                <div class="col-6 block-left-center mb-2" *ngIf="petParentDetails">
+                    <span *ngIf="petParentDetails.lastName != undefined"
+                        class="banner-heading-text">{{(petParentDetails.firstName || '') + ' '
+                        +petParentDetails.lastName}}</span>
+                    <span class="status-button" *ngIf="petParentDetails.status != undefined"
+                        [ngClass]="petParentDetails.status == '1' ? 'active-bg' : 'inactive-bg'">{{petParentDetails.status
+                        =='1' ? 'Active':'Inactive'}}</span>
+                    <span class="icon-star" *ngIf="!isFav" (click)="makeFav()"></span>
+                    <span class="icon-star-filled" *ngIf="isFav" (click)="removeFav()"></span>
+                </div>
+                <div class="col-6">
+                    <div class="float-right mb-2">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row no-gutter mt-3">
+                <div class="col-4">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Mobile</div>
+                                <div class="green-small-text">{{petParentDetails.phoneNumber ?
+                                    petParentDetails.phoneNumber : '-'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Email</div>
+                                <div class="green-small-text">{{petParentDetails.email}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Secondary Email</div>
+                                <div class="green-small-text">{{petParentDetails.secondaryEmail ?
+                                    petParentDetails.secondaryEmail : '-'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Pet Parent Address</div>
+                                <div class="green-small-text">{{petParentDetails.residentialAddress?.address1 ?
+                                    (petParentDetails.residentialAddress?.address1 + ', ' +
+                                    (petParentDetails.residentialAddress?.address2 ?
+                                    (petParentDetails.residentialAddress?.address2 + ', ') : '') +
+                                    petParentDetails.residentialAddress?.city + ', ' +
+                                    petParentDetails.residentialAddress?.state + ', ' +
+                                    petParentDetails.residentialAddress?.country + ' - ' +
+                                    petParentDetails.residentialAddress?.zipCode + ' (' +
+                                    petParentDetails.residentialAddress?.timeZone + ')') : '-'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Shipping Address</div>
+                                <div class="green-small-text">{{petParentDetails.isShipAddrSameAsResdntlAddr ?
+                                    (petParentDetails.residentialAddress?.address1 ?
+                                    (petParentDetails.residentialAddress?.address1 + ', ' +
+                                    (petParentDetails.residentialAddress?.address2 ?
+                                    (petParentDetails.residentialAddress?.address2 + ', ') : '') +
+                                    petParentDetails.residentialAddress?.city + ', ' +
+                                    petParentDetails.residentialAddress?.state + ', ' +
+                                    petParentDetails.residentialAddress?.country + ' - ' +
+                                    petParentDetails.residentialAddress?.zipCode) : '-')
+                                    :
+                                    petParentDetails.shippingAddress?.address1 ?
+                                    (petParentDetails.shippingAddress?.address1 + ', ' +
+                                    (petParentDetails.shippingAddress?.address2 ?
+                                    (petParentDetails.shippingAddress?.address2 + ', ') : '') +
+                                    petParentDetails.shippingAddress?.city + ', ' +
+                                    petParentDetails.shippingAddress?.state + ', ' +
+                                    petParentDetails.shippingAddress?.country + ' - ' +
+                                    petParentDetails.shippingAddress?.zipCode) : '-'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 mt-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Address History</div>
+                                <div class="green-small-text">
+                                    <a href="javascript:void(0)" class="link-primary"
+                                        (click)="showAddressHistory()">Click to View
+                                        History</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-block">
+            <div class="row">
+                <div class="col custom-table">
+                    <table>
+                        <thead class="table-hdr">
+                            <tr>
+                                <th *ngFor="let list of headers; let i = index">
+                                    {{ list.label }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body" *ngIf="existingPetArr?.length > 0">
+                            <tr *ngFor="let list of existingPetArr; let i = index">
+                                <td *ngIf="!list.petPhotoUrl || list.petPhotoUrl == ''">
+                                    <span class="petImage"><img class="dog-circle" src="assets/images/no-dogs.svg"
+                                            height="38" width="38"></span>
+                                </td>
+                                <td *ngIf="list.petPhotoUrl && list.petPhotoUrl != ''">
+                                    <span class="petImage"><img class="dog-circle" src="{{list.petPhotoUrl}}"
+                                            height="38" width="38"></span>
+                                </td>
+
+                                <td>
+                                    <a href="javascript:void(0)" (click)="redirectPetView(list)"
+                                        class="control-icons ng-star-inserted">{{ list.petName }} </a>
+                                </td>
+                                <td>
+                                    {{ list.breedName }}
+                                </td>
+                                <td>
+                                    {{ list.weight | number : '1.2-2'}}
+                                </td>
+                                <td>
+                                    {{ list.gender }}
+                                </td>
+                                <td>
+                                    {{ list.dob | date: 'dd-MM-yyyy'}} <br><span
+                                        *ngIf="list.isDobUnknown">(Approximate)</span>
+                                </td>
+                                <td>
+                                    {{ list.isNeutered == 1 ? 'Yes' : 'No' }}
+                                </td>
+                                <td>
+                                    <span>{{list.petStatus}}</span>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                        <tbody class="table-body" *ngIf="existingPetArr?.length == 0">
+                            <tr>
+                                <td>No Records Found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3">
+                    <div class="float-right">
+                        <button class="btn btn-secondary" type="button" (click)="backToList()">Close</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<ng-template #addressHistory let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">Address History</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <div class="close-wrapper">
+                <span class="icon-close" aria-hidden="true"></span>
+            </div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row mb-4">
+            <b class="ml-3 mb-2">Pet Parent Address</b>
+            <div class="col-12 custom-table">
+                <table>
+                    <thead class="table-hdr">
+                        <tr>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                Timezone
+                            </th>
+                            <th>
+                                From (UTC)
+                            </th>
+                            <th>
+                                To (UTC)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body" *ngIf="addressList?.residentialAddressList?.length > 0">
+                        <tr *ngFor="let list of addressList?.residentialAddressList; let i = index">
+                            <td class="max-width-250">
+                                {{list.address1 ?
+                                (list.address1 + ', ' +
+                                (list.address2 ?
+                                (list.address2 + ', ') : '') +
+                                list.city + ', ' +
+                                list.state + ', ' +
+                                list.country + ' - ' +
+                                list.zipCode) : '-'}}
+                            </td>
+                            <td>
+                                {{list.timeZone}}
+                            </td>
+                            <td>
+                                {{ list.dateFrom | date : 'MM/dd/yyyy HH:mm:ss'}}
+                            </td>
+                            <td>
+                                {{ list.dateTo ? (list.dateTo | date : 'MM/dd/yyyy HH:mm:ss') : '-'}}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody class="table-body" *ngIf="addressList?.residentialAddressList?.length == 0">
+                        <tr>
+                            <td>No Records Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <b class="ml-3 mb-2">Shipping Address</b>
+            <div class="col-12 custom-table">
+                <table>
+                    <thead class="table-hdr">
+                        <tr>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                From
+                            </th>
+                            <th>
+                                To
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body" *ngIf="addressList?.shippingAddressList?.length > 0">
+                        <tr *ngFor="let list of addressList?.shippingAddressList; let i = index">
+                            <td class="max-width-250">
+                                {{list.address1 ?
+                                (list.address1 + ', ' +
+                                (list.address2 ?
+                                (list.address2 + ', ') : '') +
+                                list.city + ', ' +
+                                list.state + ', ' +
+                                list.country + ' - ' +
+                                list.zipCode) : '-'}}
+                            </td>
+                            <td>
+                                {{ list.dateFrom | date : 'MM/dd/yyyy HH:mm:ss'}}
+                            </td>
+                            <td>
+                                {{ list.dateTo ? (list.dateTo | date : 'MM/dd/yyyy HH:mm:ss') : '-'}}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody class="table-body" *ngIf="addressList?.shippingAddressList?.length == 0">
+                        <tr>
+                            <td>No Records Found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <b>
+                NOTE: Other than the dates mentioned above,  shipping address is same as pet parent address
+            </b>
+        </div>
+
+        <div class="row text-right">
+            <div class="col-12 mb-4">
+                <button type="button" class="btn btn-secondary btn-custom float-right" (click)="d('Cross click');">
+                    Close
+                </button>&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+</ng-template>

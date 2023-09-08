@@ -1,0 +1,322 @@
+<div class="content-box">
+    <div class="content-hdr">
+        <div class="row">
+            <div class="col-6 block-left-center">Define Jump/Skip
+            </div>
+        </div>
+    </div>
+    <div class="content-blk">
+        <div class="content-banner mb-3">
+            <div class="row no-gutter border-1">
+                <div class="col-6 block-left-center mb-2">
+                    <span class="banner-heading-text mr-2">{{data.questionnaireName}}</span>
+                    <span class="status-button" *ngIf="data.questionnaireName"
+                        [ngClass]="!data.isActive ? 'inactive-bg': (!data.isPublished ? 'active-bg' : 'info-bg')">{{!data.isActive
+                        ?
+                        "Inactive" : (!data.isPublished ? "Draft" : "Published")}}</span>
+                    <span class="icon-star" *ngIf="!isFav" (click)="makeFav()"></span>
+                    <span class="icon-star-filled" *ngIf="isFav" (click)="removeFav()"></span>
+                </div>
+
+            </div>
+
+            <div class="row no-gutter pb-3 mt-3" [ngClass]="data?.sections?.length ? 'border-1' : ''">
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Type</div>
+                                <div class="green-small-text">{{data.questionnaireType }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3" *ngIf="data.questionnaireTypeId == 1">
+                                <div class="small-text">Level</div>
+                                <div class="green-small-text">{{data.questionnaireLevel || '-'}}</div>
+                            </div>
+                            <div class="box-wrap mr-3" *ngIf="data.questionnaireTypeId == 2">
+                                <div class="small-text">Category</div>
+                                <div class="green-small-text">{{data.questionnaireCategory || '-'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">Start Date</div>
+                                <div class="green-small-text">{{data.startDate | date: 'MM/dd/yyyy'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row no-gutter">
+                        <div class="col-12">
+                            <div class="box-wrap mr-3">
+                                <div class="small-text">End Date</div>
+                                <div class="green-small-text">{{data.endDate | date: 'MM/dd/yyyy'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-block">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <ng-container *ngIf="data?.sections?.length; else questionsWithoutSectionsTemplate">
+                        <ngb-accordion [closeOthers]="true" class="sections-accordion">
+                            <ng-container *ngFor="let section of data.sections; let i = index">
+                                <ngb-panel id="{{i}}"
+                                    *ngIf="data.sectionWiseQuestions && data?.sectionWiseQuestions[i][section.sectionName]?.length">
+                                    <ng-template ngbPanelTitle>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="d-flex flex-column pr-4">
+                                                <small class="mb-2 font-weight-bold">Section {{i+1}} of
+                                                    {{data.sections.length}}</small>
+                                                <span class="section mb-2 pl-0"
+                                                    *ngIf="section.sectionName">{{section?.sectionName}}
+                                                </span>
+                                                <pre class="sectionDescription-align text-small"
+                                                    [innerHTML]="section?.sectionDescription"></pre>
+                                            </div>
+                                            <div class="d-flex my-auto"><i class="icon-right-arrow"></i></div>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template ngbPanelContent>
+                                        <ng-container [ngTemplateOutlet]="questionsTemplate"
+                                            [ngTemplateOutletContext]="{questions: data.sectionWiseQuestions[i][section.sectionName], sectionIndex: i}">
+                                        </ng-container>
+                                    </ng-template>
+                                </ngb-panel>
+                            </ng-container>
+                        </ngb-accordion>
+                    </ng-container>
+
+
+                    <div class="row " *ngIf="data?.questions?.length == 0">
+                        <div class="col-12">
+                            No Questions Found.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-3">
+                    <div class="float-right">
+                        <button class="btn btn-secondary" type="button" (click)="cancel()">Cancel</button>&nbsp;&nbsp;
+                        <button class="btn btn-red" type="button" (click)="confirmPublishCheck()">Publish</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #questionsWithoutSectionsTemplate>
+    <ng-container [ngTemplateOutlet]="questionsTemplate"
+        [ngTemplateOutletContext]="{questions: data?.questions}"></ng-container>
+</ng-template>
+
+<ng-template #questionsTemplate let-questions="questions" let-sectionIndex="sectionIndex">
+    <ngb-accordion [closeOthers]="true" class="questions-accordion">
+        <ngb-panel id="{{quesIndex}}" *ngFor="let ques of questions; let quesIndex = index;">
+            <ng-template ngbPanelTitle>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex flex-column pr-4">
+                        <div>
+                            <span class="position-absolute">
+                                <b>{{"Q" + ques.questionOrder}}</b>
+                            </span>
+                            <span class="question mb-2">{{ques.question}}
+                                <span *ngIf="ques.isMandatory" class="asterisk">*</span>&nbsp;&nbsp;
+                                <span>({{ques.questionType}})</span>
+                            </span>
+                        </div>
+                        <img [src]="ques.questionImageUrl" width="100px" class="img-fluid ml-5"
+                            *ngIf="ques.questionImageUrl">
+                        <div class="ml-5"
+                            *ngIf="ques.suffleOptionOrder || ques.validityPeriod || ques.isIncludeInDataExtract">
+                            <ul class="my-1">
+                                <li *ngIf="ques.suffleOptionOrder">Shuffle Option Order</li>
+                                <li *ngIf="ques.isIncludeInDataExtract">Include In Data Extract</li>
+                                <li *ngIf="ques.validityPeriod">Validity - {{ques.validityPeriod}} days</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-flex my-auto"><i class="icon-right-arrow"></i></div>
+                </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+                <div class="row" *ngIf="ques.questionTypeId == 1 || ques.questionTypeId == 2">
+                    <div class="col-12 mb-2" *ngFor="let opt of ques.questionAnswerOptions; let optionIndex = index"
+                        [selected]="optionIndex == 0">
+                        <div class="row">
+                            <div class="col-5 my-auto">
+                                {{optionIndex + 1}}. {{opt.questionAnswer}} <br>
+                                <img *ngIf="opt.ansOptionMediaUrl" [src]="opt.ansOptionMediaUrl"
+                                    class="img-fluid ml-3 mt-2" width="100px">
+                            </div>
+                            <div class="col-7" *ngIf="(data.sections.length || ques?.nextQuestions.length)">
+                                <ng-container *ngIf="!opt.submitQuestionnaire ; else autoSubmit">
+                                    <form [formGroup]="skipForm"
+                                        *ngIf="toUpperAndTrim(opt.questionAnswer) != othersSpecifyText">
+                                        <fieldset class="w-fieldset"
+                                            *ngIf="data.questions[data.questions.length-1].questionId != ques.questionId">
+                                            <!-- ngIf case is - if it is the last question, no need to show skip as it doesn't contain next questions -->
+                                            <legend><label class="label">Skip To</label>
+                                            </legend>
+                                            <select class="form-control w-100"
+                                                *ngIf="data?.sections?.length; else quesWithoutSectionsAsOptions"
+                                                [formControl]="getSkipToControl(optionIndex, quesIndex, sectionIndex)">
+                                                <option value="">Select</option>
+                                                <ng-container
+                                                    *ngFor="let section of data.sections; let nextQuesSectionIndex = index">
+                                                    <ng-container
+                                                        *ngIf="ques?.nextQuestions && ques?.nextQuestions[nextQuesSectionIndex][section.sectionName]?.length">
+                                                        <optgroup [label]="section.sectionName">
+                                                            <option
+                                                                *ngFor="let nextQues of ques?.nextQuestions[nextQuesSectionIndex][section.sectionName]"
+                                                                title={{nextQues.question}}
+                                                                [ngValue]="nextQues.questionId">
+                                                                {{"Q"+nextQues.questionOrder}} -
+                                                                {{(nextQues.question.length > 60 ) ?
+                                                                (nextQues.question).substr(0, 60) + "..." :
+                                                                nextQues.question}}
+                                                            </option>
+                                                        </optgroup>
+                                                    </ng-container>
+                                                </ng-container>
+                                            </select>
+                                            <ng-template #quesWithoutSectionsAsOptions>
+                                                <select class="form-control w-100"
+                                                    [formControl]="getSkipToControl(optionIndex, quesIndex)">
+                                                    <option value="">Select</option>
+                                                    <option *ngFor="let nextQues of ques.nextQuestions"
+                                                        [ngValue]="nextQues.questionId" title={{nextQues.question}}>
+                                                        {{"Q"+nextQues.questionOrder}} - {{(nextQues.question.length >
+                                                        60 ) ?
+                                                        (nextQues.question).substr(0, 60) + "..." :
+                                                        nextQues.question}}
+                                                    </option>
+                                                </select>
+                                            </ng-template>
+                                        </fieldset>
+                                    </form>
+                                </ng-container>
+                                <ng-template #autoSubmit>
+                                    <div class="checkbox-wrapper">
+                                        <label>
+                                            <input type="checkbox" class="check checkbox-width-20" [checked]=true
+                                                disabled />
+                                            <span class="label">
+                                                Submit Questionnaire
+                                            </span>
+                                        </label>
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="ques.questionTypeId == 3">
+                    <div class="row" *ngFor="let opt of ques.questionAnswerOptions; let optionIndex = index">
+                        <div class="col-12">
+                            {{optionIndex + 1}}. {{opt.questionAnswer}}<br>
+                            <img *ngIf="opt.ansOptionMediaUrl" [src]="opt.ansOptionMediaUrl" class="img-fluid ml-3 mt-2"
+                                width="100px">
+                        </div>
+                        <div class="col-12" *ngIf="opt.submitQuestionnaire">
+                            <ul class="my-1">
+                                <li *ngIf="opt.submitQuestionnaire">Submit Questionnaire</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row"
+                    *ngIf="ques.questionTypeId == 4 || ques.questionTypeId == 5 || ques.questionTypeId == 9">
+                    <div class="col-12">
+                        <div class="text" *ngIf="ques.questionTypeId == 4">
+                            <label>
+                                <input type="text" class="form-control d-inline-block" disabled>
+                            </label>
+                        </div>
+
+                        <div class="text" *ngIf="ques.questionTypeId == 5">
+                            <label>
+                                <textarea class="form-control d-inline-block" disabled></textarea>
+                            </label>
+                        </div>
+
+                        <div class="text" *ngIf="ques.questionTypeId == 9">
+                            <label>
+                                <input type="text" placeholder="MM-DD-YYYY" class="form-control d-inline-block"
+                                    disabled>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="ques.questionTypeId == 6">
+                    <div *ngFor="let opt of ques.questionAnswerOptions">
+                        <div class="row">
+                            <div class="col-3 m-auto">
+                                {{opt.questionAnswer}}
+                            </div>
+                            <div class="col-9">
+                                <div class="custom-slider" [ngClass]="ques.other.vertical ? 'vertical' : ''">
+                                    <ngx-slider [options]="ques.other"></ngx-slider>
+                                    <p class="floorDesc">{{ques.other.floorDescription}}</p>
+                                    <p class="ceilDesc">{{ques.other.ceilDescription}}</p>
+                                    <!-- Used legends for showing tickstep values, as tickstepvalues: true not working if the floor value does not start with 0. Hence used legends for showing tick steps. Also, floorDescription and ceilDescription are legends, but defined custom css as the legends are used to display the tick steps and also if we put the descriptions in legends, it does not work for continuous scales -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="ques.questionTypeId == 7 || ques.questionTypeId == 8">
+                    <div class="col-12">
+                        <div class="cloud-img ml-4"><i class="icon-upload size-40"></i></div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</ng-template>
+
+<ng-template #confirmPublish let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">
+            Publish Questionnaire?
+        </h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');">
+            <div class="close-wrapper">
+                <span class="icon-close" aria-hidden="true"></span>
+            </div>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="row mb-4">
+            <div class="col-12">
+                Published questionnaires cannot be modified. Do you still want to publish questionnaire?
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-12 mb-4">
+                <button type="button" class="btn btn-primary btn-custom mr-3" (click)="d('Cross click');publish()">
+                    Yes
+                </button>
+                <button type="button" class="btn btn-secondary btn-custom" (click)="d('Cross click');">
+                    No
+                </button>
+            </div>
+        </div>
+
+    </div>
+</ng-template>

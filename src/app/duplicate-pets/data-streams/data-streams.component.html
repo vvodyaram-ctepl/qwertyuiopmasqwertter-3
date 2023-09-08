@@ -1,0 +1,176 @@
+<!-- <div class="content-box"> -->
+<div class="content-block">
+  <div class="">
+    <div class="custom-table">
+      <!-- <form [formGroup]="streamForm" (submit)='onSubmit(streamForm.value)'>
+          <div formArrayName="arr">
+            <div> -->
+      <table *ngIf="dataStreamArray && dataStreamArray.length > 0">
+        <thead class="table-hdr">
+          <tr>
+            <th width="6%"></th>
+            <th>STREAM</th>
+            <th>PET</th>
+            <th>STUDY</th>
+            <th>ASSET NUMBER</th>
+            <th>START DATE</th>
+            <th>END DATE</th>
+            <!-- <th>EXTRACT START DATE</th>
+                    <th>EXTRACT END DATE</th> -->
+          </tr>
+        </thead>
+        <tbody class="table-body">
+          <tr *ngFor="let stream of dataStreamArray;let j=index">
+            <td>
+          <tr>
+            <td [ngClass]="stream.petType =='P' ?  'primary-pet' : 'duplicate-pet'">
+              <span>{{stream.petType}}</span>
+            </td>
+            <td>
+              <label class="chk-container">
+                <input type="checkbox" id="flexCheckDefault" [checked]="stream.checked"
+                  (change)="getChkboxValue($event, stream,j)">
+                <span class="checkmark"></span>
+              </label>
+            </td>
+          </tr>
+          </td>
+          <td>{{stream.streamId}}</td>
+          <td>{{stream.petName}}</td>
+          <td>{{stream.studyName}}</td>
+          <td>{{stream.assetNumber}}</td>
+          <td>{{stream.startDate}}</td>
+          <td>{{stream.endDate}}</td>
+          <!-- <td>
+                    <div>
+                      <datepicker class="w-100"  format="MM-DD-YYYY"></datepicker>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <datepicker class="w-100" formControlName="startDate"  format="MM-DD-YYYY"></datepicker>
+                    </div>
+                  </td> -->
+          </tr>
+        </tbody>
+        <tbody class="table-body" *ngIf="dataStreamArray && dataStreamArray.length == 0">
+          <tr>
+            <td>No Records Found</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row mb-3" *ngIf="dataStreamArray && dataStreamArray.length > 0">
+        <div class="col-12">
+          <div class="float-right mt-2">
+            <button class="btn btn-primary" width="150px" type="button" (click)="stitch()">
+              Stitch
+            </button>
+          </div>
+        </div>
+      </div>
+      <form [formGroup]="streamForm">
+        <div>
+          <div formArrayName="arr">
+            <table class="table mt-3" *ngFor="let a of streamForm.get('arr')['controls']; let i = index;let last =last">
+              <thead>
+                <tr>
+                  <th width="3%"></th>
+                  <th width="6%">STREAM</th>
+                  <th width="12%">PET</th>
+                  <th width="12%">STUDY</th>
+                  <th width="10%">ASSET NUMBER</th>
+                  <th width="8%">START DATE</th>
+                  <th width="8%">END DATE</th>
+                  <th width="12%">EXTRACT START DATE</th>
+                  <th width="12%">EXTRACT END DATE</th>
+                  <th width="12%">Exclude From Data Extract</th>
+                  <th width="4%">
+                    <div class="card icon-card-list red-bg mr-2 pointer-cursor" title="Remove"
+                      (click)="removeFromStitch(i)">
+                      <span class=" pointer-cursor size-17" title="Remove">-</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="scrollbar scrollbar-near-moon thin">
+                <ng-container [formArrayName]="i" *ngFor="let b of streamForm.get('arr').controls[i].controls; 
+                  let j = index;let l =last">
+                  <tr [formGroupName]="j">
+                    <td>
+                  <tr>
+                    <td [ngClass]="b.value.data.petType =='P' ?  'primary-pet2' : 'duplicate-pet2'">
+                      <span>{{b.value.data.petType}}</span>
+                    </td>
+                    <!-- <td>
+                      <label class="chk-container">
+                        <input type="checkbox" id="flexCheckDefault" (change)="getChkboxValue($event, b.value.data)">
+                        <span class="checkmark"></span>
+                      </label>
+                    </td> -->
+                  </tr>
+                  </td>
+                  <td>{{b.value.data.streamId}}</td>
+                  <td>{{b.value.data.petName}}</td>
+                  <td>{{b.value.data.studyName}}</td>
+                  <td>{{b.value.data.assetNumber}}</td>
+                  <td>{{b.value.data.startDate}}</td>
+                  <td>{{b.value.data.endDate}}</td>
+                  <td>
+                    <div>
+                      <datepicker class="w-100 input-date" formControlName="startDate" format="MM-DD-YYYY"
+                        [disabled]="streamForm.value.arr[i][j].isExcludeDataExtract"
+                        [minDate]="b.value.data.startDate | date: 'MM-dd-yyyy'"
+                        [maxDate]="(streamForm.value.arr[i][j].endDate || b.value.data.endDate) | date: 'MM-dd-yyyy'">
+                      </datepicker>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      <datepicker class="w-100 input-date" formControlName="endDate" format="MM-DD-YYYY"
+                        [disabled]="streamForm.value.arr[i][j].isExcludeDataExtract"
+                        [minDate]="(streamForm.value.arr[i][j].startDate || b.value.data.startDate) | date: 'MM-dd-yyyy'"
+                        [maxDate]="b.value.data.endDate | date: 'MM-dd-yyyy'"></datepicker>
+                    </div>
+                  </td>
+                  <td>
+                    <label class="chk-container mt-2">
+                      <input type="checkbox" 
+                      id="flexCheckDefault"
+                      formControlName="isExcludeDataExtract"
+                      (change)="excludeDataExtract($event,i,j)"
+                      >
+                      <span class="checkmark"></span>
+                    </label>
+                  </td>
+                  <!-- <td>
+                    <div  class="card icon-card-list red-bg mr-2 mt-3 pointer-cursor" title="Remove"
+                             >
+                            <span class=" pointer-cursor size-17" title="Remove">-</span>
+                      </div>
+                  </td> -->
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12">
+      <div class="float-right">
+        <button class="btn btn-secondary" type="button" (click)="back()">
+          Back
+        </button>&nbsp;&nbsp;
+        <button class="btn btn-primary" type="button" (click)="onSubmit()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
+
+<!-- </form>
+  </div>
+</div> -->

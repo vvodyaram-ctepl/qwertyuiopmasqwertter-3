@@ -14,7 +14,7 @@ export const environment = {
   userId: 'userId',
   refreshTokenString: 'userRefreshToken',
   firebase: {
-    apiKey: "AIzaSyDpTi6TNBGQBv-ybszVnTAr-cLhy2MIH1c",
+    apiKey: "",
     authDomain: "ct-wearables-portal-prod.firebaseapp.com",
     projectId: "ct-wearables-portal-prod",
     storageBucket: "ct-wearables-portal-prod.appspot.com"

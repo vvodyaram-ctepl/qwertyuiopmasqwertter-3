@@ -95,6 +95,33 @@ export class BulkUploadComponent implements OnInit {
     //  console.log(this.selectable);
      // console.log(ele);
       
+      if(ele.deviceNumber == ''){
+        ele.deviceNumber = '-';
+      }
+      if(ele.deviceType == ''){
+        ele.deviceType = '-';
+      }
+      if(ele.deviceModel == ''){
+        ele.deviceModel = '-';
+      }
+      if(ele.deviceLocationName == ''){
+        ele.deviceLocationName = '-';
+      }
+      if(ele.mfgSerialNumber == ''){
+        ele.mfgSerialNumber = '-';
+      }
+      if(ele.mfgFirmware == ''){
+        ele.mfgFirmware = '-';
+      }
+      if(ele.mfgMacAddr == ''){
+        ele.mfgMacAddr = '-';
+      }
+      if(ele.wifiMacAddr == ''){
+        ele.wifiMacAddr = '-';
+      }
+      if(ele.trackingNumber == ''){
+        ele.trackingNumber = '-';
+      }
       
       if(ele.exceptionMsg && ele.exceptionMsg.trim() !=''){
         ele.exceptionMsg = ele.exceptionMsg.replace(/ *, */g, ',<br>')
